@@ -33,12 +33,55 @@ const DocumentImage = styled.img`
   user-select: none;
 `;
 
-const SignatureOverlay = styled.img`
+const SignatureWrapper = styled.div`
   position: absolute;
+  pointer-events: auto;
+  z-index: 10;
+  ${props => props.$isDragging ? 'opacity: 0.7;' : ''}
+`;
+
+const SignatureOverlay = styled.img`
+  width: 100%;
+  height: 100%;
   cursor: move;
   border: 2px dashed #4f46e5;
   user-select: none;
-  ${props => props.$isDragging ? 'opacity: 0.7;' : ''}
+  display: block;
+`;
+
+const ResizeHandle = styled.div`
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #4f46e5;
+  border: 2px solid white;
+  border-radius: 50%;
+  pointer-events: auto;
+  z-index: 11;
+  
+  &.top-left {
+    top: -6px;
+    left: -6px;
+    cursor: nwse-resize;
+  }
+  
+  &.top-right {
+    top: -6px;
+    right: -6px;
+    cursor: nesw-resize;
+  }
+  
+  &.bottom-left {
+    bottom: -6px;
+    left: -6px;
+    cursor: nesw-resize;
+  }
+  
+  &.bottom-right {
+    bottom: -6px;
+    right: -6px;
+    cursor: nwse-resize;
+  }
 `;
 
 const ButtonGroup = styled.div`
@@ -50,8 +93,12 @@ const ButtonGroup = styled.div`
 const ImageSign = ({ file, signature, onReset }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [signaturePosition, setSignaturePosition] = useState({ x: 100, y: 100 });
+  const [signatureSize, setSignatureSize] = useState({ width: 200, height: 80 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeHandle, setResizeHandle] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0, posX: 0, posY: 0 });
   const [success, setSuccess] = useState(false);
   const imageRef = useRef(null);
   const canvasRef = useRef(null);
@@ -65,6 +112,7 @@ const ImageSign = ({ file, signature, onReset }) => {
   }, [file]);
 
   const handleSignatureMouseDown = (e) => {
+    e.stopPropagation();
     setIsDragging(true);
     const rect = e.currentTarget.getBoundingClientRect();
     setDragOffset({
@@ -73,21 +121,95 @@ const ImageSign = ({ file, signature, onReset }) => {
     });
   };
 
-  const handleMouseMove = (e) => {
-    if (!isDragging || !imageRef.current) return;
-
-    const imageRect = imageRef.current.getBoundingClientRect();
-    const newX = e.clientX - imageRect.left - dragOffset.x;
-    const newY = e.clientY - imageRect.top - dragOffset.y;
-
-    setSignaturePosition({
-      x: Math.max(0, Math.min(newX, imageRect.width - 200)),
-      y: Math.max(0, Math.min(newY, imageRect.height - 80))
+  const handleResizeMouseDown = (e, handle) => {
+    e.stopPropagation();
+    setIsResizing(true);
+    setResizeHandle(handle);
+    setResizeStart({
+      x: e.clientX,
+      y: e.clientY,
+      width: signatureSize.width,
+      height: signatureSize.height,
+      posX: signaturePosition.x,
+      posY: signaturePosition.y
     });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!imageRef.current) return;
+
+    if (isDragging) {
+      const imageRect = imageRef.current.getBoundingClientRect();
+      const newX = e.clientX - imageRect.left - dragOffset.x;
+      const newY = e.clientY - imageRect.top - dragOffset.y;
+
+      setSignaturePosition({
+        x: Math.max(0, Math.min(newX, imageRect.width - signatureSize.width)),
+        y: Math.max(0, Math.min(newY, imageRect.height - signatureSize.height))
+      });
+    } else if (isResizing) {
+      const deltaX = e.clientX - resizeStart.x;
+      const deltaY = e.clientY - resizeStart.y;
+      const imageRect = imageRef.current.getBoundingClientRect();
+
+      let newWidth = signatureSize.width;
+      let newHeight = signatureSize.height;
+      let newX = signaturePosition.x;
+      let newY = signaturePosition.y;
+
+      // Calculate new dimensions based on which handle is being dragged
+      switch (resizeHandle) {
+        case 'top-left':
+          newWidth = resizeStart.width - deltaX;
+          newHeight = resizeStart.height - deltaY;
+          newX = resizeStart.posX + deltaX;
+          newY = resizeStart.posY + deltaY;
+          break;
+        case 'top-right':
+          newWidth = resizeStart.width + deltaX;
+          newHeight = resizeStart.height - deltaY;
+          newY = resizeStart.posY + deltaY;
+          break;
+        case 'bottom-left':
+          newWidth = resizeStart.width - deltaX;
+          newHeight = resizeStart.height + deltaY;
+          newX = resizeStart.posX + deltaX;
+          break;
+        case 'bottom-right':
+          newWidth = resizeStart.width + deltaX;
+          newHeight = resizeStart.height + deltaY;
+          break;
+      }
+
+      // Enforce minimum size
+      newWidth = Math.max(50, newWidth);
+      newHeight = Math.max(20, newHeight);
+
+      // Ensure signature doesn't go outside image bounds
+      if (newX < 0) {
+        newWidth += newX;
+        newX = 0;
+      }
+      if (newY < 0) {
+        newHeight += newY;
+        newY = 0;
+      }
+      if (newX + newWidth > imageRect.width) {
+        newWidth = imageRect.width - newX;
+      }
+      if (newY + newHeight > imageRect.height) {
+        newHeight = imageRect.height - newY;
+      }
+
+      setSignatureSize({ width: newWidth, height: newHeight });
+      setSignaturePosition({ x: newX, y: newY });
+    }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    setIsResizing(false);
+    setResizeHandle(null);
   };
 
   const handleSaveSignedImage = () => {
@@ -114,8 +236,8 @@ const ImageSign = ({ file, signature, onReset }) => {
       // Draw the signature at the scaled position
       const scaledX = signaturePosition.x * scaleX;
       const scaledY = signaturePosition.y * scaleY;
-      const scaledWidth = 200 * scaleX;
-      const scaledHeight = 80 * scaleY;
+      const scaledWidth = signatureSize.width * scaleX;
+      const scaledHeight = signatureSize.height * scaleY;
 
       ctx.drawImage(signatureImg, scaledX, scaledY, scaledWidth, scaledHeight);
 
@@ -149,7 +271,7 @@ const ImageSign = ({ file, signature, onReset }) => {
   return (
     <Container>
       <InfoBox type="info">
-        Drag the signature to position it on the image, then click "Sign & Download".
+        Drag the signature to position it, or use the corner handles to resize it. Then click "Sign & Download".
       </InfoBox>
 
       <ViewerContainer
@@ -168,19 +290,38 @@ const ImageSign = ({ file, signature, onReset }) => {
               />
               
               {signature && (
-                <SignatureOverlay
-                  src={signature.dataUrl}
-                  alt="Signature"
+                <SignatureWrapper
                   style={{
                     left: `${signaturePosition.x}px`,
                     top: `${signaturePosition.y}px`,
-                    width: '200px',
-                    height: '80px'
+                    width: `${signatureSize.width}px`,
+                    height: `${signatureSize.height}px`
                   }}
-                  $isDragging={isDragging}
-                  onMouseDown={handleSignatureMouseDown}
-                  draggable={false}
-                />
+                  $isDragging={isDragging || isResizing}
+                >
+                  <SignatureOverlay
+                    src={signature.dataUrl}
+                    alt="Signature"
+                    onMouseDown={handleSignatureMouseDown}
+                    draggable={false}
+                  />
+                  <ResizeHandle 
+                    className="top-left" 
+                    onMouseDown={(e) => handleResizeMouseDown(e, 'top-left')}
+                  />
+                  <ResizeHandle 
+                    className="top-right" 
+                    onMouseDown={(e) => handleResizeMouseDown(e, 'top-right')}
+                  />
+                  <ResizeHandle 
+                    className="bottom-left" 
+                    onMouseDown={(e) => handleResizeMouseDown(e, 'bottom-left')}
+                  />
+                  <ResizeHandle 
+                    className="bottom-right" 
+                    onMouseDown={(e) => handleResizeMouseDown(e, 'bottom-right')}
+                  />
+                </SignatureWrapper>
               )}
             </>
           )}

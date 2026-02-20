@@ -31,12 +31,60 @@ const PageWrapper = styled.div`
   display: inline-block;
 `;
 
-const SignatureOverlay = styled.img`
+const PdfPageWrapper = styled.div`
+  pointer-events: none;
+  position: relative;
+`;
+
+const SignatureWrapper = styled.div`
   position: absolute;
+  pointer-events: auto;
+  z-index: 10;
+  ${props => props.$isDragging ? 'opacity: 0.7;' : ''}
+`;
+
+const SignatureOverlay = styled.img`
+  width: 100%;
+  height: 100%;
   cursor: move;
   border: 2px dashed #4f46e5;
   user-select: none;
-  ${props => props.$isDragging ? 'opacity: 0.7;' : ''}
+  display: block;
+`;
+
+const ResizeHandle = styled.div`
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #4f46e5;
+  border: 2px solid white;
+  border-radius: 50%;
+  pointer-events: auto;
+  z-index: 11;
+  
+  &.top-left {
+    top: -6px;
+    left: -6px;
+    cursor: nwse-resize;
+  }
+  
+  &.top-right {
+    top: -6px;
+    right: -6px;
+    cursor: nesw-resize;
+  }
+  
+  &.bottom-left {
+    bottom: -6px;
+    left: -6px;
+    cursor: nesw-resize;
+  }
+  
+  &.bottom-right {
+    bottom: -6px;
+    right: -6px;
+    cursor: nwse-resize;
+  }
 `;
 
 const ButtonGroup = styled.div`
@@ -60,8 +108,12 @@ const PdfSign = ({ file, signature, onReset }) => {
   const [numPages, setNumPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [signaturePosition, setSignaturePosition] = useState({ x: 100, y: 100 });
+  const [signatureSize, setSignatureSize] = useState({ width: 200, height: 80 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeHandle, setResizeHandle] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0, posX: 0, posY: 0 });
   const [pdfUrl, setPdfUrl] = useState(null);
   const [success, setSuccess] = useState(false);
   const pageRef = useRef(null);
@@ -79,6 +131,7 @@ const PdfSign = ({ file, signature, onReset }) => {
   };
 
   const handleSignatureMouseDown = (e) => {
+    e.stopPropagation();
     setIsDragging(true);
     const rect = e.currentTarget.getBoundingClientRect();
     setDragOffset({
@@ -87,21 +140,95 @@ const PdfSign = ({ file, signature, onReset }) => {
     });
   };
 
-  const handleMouseMove = (e) => {
-    if (!isDragging || !pageRef.current) return;
-
-    const pageRect = pageRef.current.getBoundingClientRect();
-    const newX = e.clientX - pageRect.left - dragOffset.x;
-    const newY = e.clientY - pageRect.top - dragOffset.y;
-
-    setSignaturePosition({
-      x: Math.max(0, Math.min(newX, pageRect.width - 200)),
-      y: Math.max(0, Math.min(newY, pageRect.height - 80))
+  const handleResizeMouseDown = (e, handle) => {
+    e.stopPropagation();
+    setIsResizing(true);
+    setResizeHandle(handle);
+    setResizeStart({
+      x: e.clientX,
+      y: e.clientY,
+      width: signatureSize.width,
+      height: signatureSize.height,
+      posX: signaturePosition.x,
+      posY: signaturePosition.y
     });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!pageRef.current) return;
+
+    if (isDragging) {
+      const pageRect = pageRef.current.getBoundingClientRect();
+      const newX = e.clientX - pageRect.left - dragOffset.x;
+      const newY = e.clientY - pageRect.top - dragOffset.y;
+
+      setSignaturePosition({
+        x: Math.max(0, Math.min(newX, pageRect.width - signatureSize.width)),
+        y: Math.max(0, Math.min(newY, pageRect.height - signatureSize.height))
+      });
+    } else if (isResizing) {
+      const deltaX = e.clientX - resizeStart.x;
+      const deltaY = e.clientY - resizeStart.y;
+      const pageRect = pageRef.current.getBoundingClientRect();
+
+      let newWidth = signatureSize.width;
+      let newHeight = signatureSize.height;
+      let newX = signaturePosition.x;
+      let newY = signaturePosition.y;
+
+      // Calculate new dimensions based on which handle is being dragged
+      switch (resizeHandle) {
+        case 'top-left':
+          newWidth = resizeStart.width - deltaX;
+          newHeight = resizeStart.height - deltaY;
+          newX = resizeStart.posX + deltaX;
+          newY = resizeStart.posY + deltaY;
+          break;
+        case 'top-right':
+          newWidth = resizeStart.width + deltaX;
+          newHeight = resizeStart.height - deltaY;
+          newY = resizeStart.posY + deltaY;
+          break;
+        case 'bottom-left':
+          newWidth = resizeStart.width - deltaX;
+          newHeight = resizeStart.height + deltaY;
+          newX = resizeStart.posX + deltaX;
+          break;
+        case 'bottom-right':
+          newWidth = resizeStart.width + deltaX;
+          newHeight = resizeStart.height + deltaY;
+          break;
+      }
+
+      // Enforce minimum size
+      newWidth = Math.max(50, newWidth);
+      newHeight = Math.max(20, newHeight);
+
+      // Ensure signature doesn't go outside page bounds
+      if (newX < 0) {
+        newWidth += newX;
+        newX = 0;
+      }
+      if (newY < 0) {
+        newHeight += newY;
+        newY = 0;
+      }
+      if (newX + newWidth > pageRect.width) {
+        newWidth = pageRect.width - newX;
+      }
+      if (newY + newHeight > pageRect.height) {
+        newHeight = pageRect.height - newY;
+      }
+
+      setSignatureSize({ width: newWidth, height: newHeight });
+      setSignaturePosition({ x: newX, y: newY });
+    }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    setIsResizing(false);
+    setResizeHandle(null);
   };
 
   const handlePreviousPage = () => {
@@ -132,8 +259,8 @@ const PdfSign = ({ file, signature, onReset }) => {
       
       // Calculate signature dimensions and position
       // PDF coordinates start from bottom-left, so we need to convert
-      const signatureWidth = 200;
-      const signatureHeight = 80;
+      const signatureWidth = signatureSize.width;
+      const signatureHeight = signatureSize.height;
       const x = signaturePosition.x;
       const y = height - signaturePosition.y - signatureHeight;
       
@@ -175,7 +302,7 @@ const PdfSign = ({ file, signature, onReset }) => {
   return (
     <Container>
       <InfoBox type="info">
-        Drag the signature to position it on the document, then click "Sign & Download".
+        Drag the signature to position it, or use the corner handles to resize it. Then click "Sign & Download".
       </InfoBox>
 
       <ViewerContainer
@@ -185,24 +312,45 @@ const PdfSign = ({ file, signature, onReset }) => {
       >
         {pdfUrl && (
           <PageWrapper ref={pageRef}>
-            <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-              <Page pageNumber={currentPage} />
-            </Document>
+            <PdfPageWrapper>
+              <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
+                <Page pageNumber={currentPage} />
+              </Document>
+            </PdfPageWrapper>
             
             {signature && (
-              <SignatureOverlay
-                src={signature.dataUrl}
-                alt="Signature"
+              <SignatureWrapper
                 style={{
                   left: `${signaturePosition.x}px`,
                   top: `${signaturePosition.y}px`,
-                  width: '200px',
-                  height: '80px'
+                  width: `${signatureSize.width}px`,
+                  height: `${signatureSize.height}px`
                 }}
-                $isDragging={isDragging}
-                onMouseDown={handleSignatureMouseDown}
-                draggable={false}
-              />
+                $isDragging={isDragging || isResizing}
+              >
+                <SignatureOverlay
+                  src={signature.dataUrl}
+                  alt="Signature"
+                  onMouseDown={handleSignatureMouseDown}
+                  draggable={false}
+                />
+                <ResizeHandle 
+                  className="top-left" 
+                  onMouseDown={(e) => handleResizeMouseDown(e, 'top-left')}
+                />
+                <ResizeHandle 
+                  className="top-right" 
+                  onMouseDown={(e) => handleResizeMouseDown(e, 'top-right')}
+                />
+                <ResizeHandle 
+                  className="bottom-left" 
+                  onMouseDown={(e) => handleResizeMouseDown(e, 'bottom-left')}
+                />
+                <ResizeHandle 
+                  className="bottom-right" 
+                  onMouseDown={(e) => handleResizeMouseDown(e, 'bottom-right')}
+                />
+              </SignatureWrapper>
             )}
           </PageWrapper>
         )}
