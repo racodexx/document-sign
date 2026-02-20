@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
-import InfoBox from "./InfoBox";
+import InfoBox from "./base/InfoBox";
 
 const DropZone = styled.div`
   width: 50%;
