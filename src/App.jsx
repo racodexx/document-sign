@@ -28,12 +28,21 @@ const App = () => {
 
   const onSetFile = (file) => {
     setFile(file);
-    setStep(SignSteps.CREATE_SIGNATURE);
+    if (!signature) {
+      setStep(SignSteps.CREATE_SIGNATURE);
+    } else {
+      setStep(SignSteps.SIGN_DOCUMENT);
+    }
   };
 
   const onSetSignature = (signature) => {
     setSignature(signature);
     setStep(SignSteps.SIGN_DOCUMENT);
+  };
+
+  const onReset = () => {
+    setFile(null);
+    setStep(SignSteps.UPLOAD_FILE);
   };
 
   const renderUploadFile = () => {
@@ -69,11 +78,7 @@ const App = () => {
       return <></>;
     }
     return (
-      <DocumentSign
-        signature={signature}
-        document={file}
-        onReset={() => setStep(SignSteps.UPLOAD_FILE)}
-      />
+      <DocumentSign signature={signature} document={file} onReset={onReset} />
     );
   };
 
