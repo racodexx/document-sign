@@ -1,22 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-import Button from "./base/Button";
-import InfoBox from "./base/InfoBox";
+import {Button,InfoBox,Container,Title} from "../components/base/index";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-const Title = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0;
-`;
 
 const CanvasContainer = styled.div`
   border: 2px solid #cbd5e1;

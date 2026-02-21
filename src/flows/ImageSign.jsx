@@ -1,13 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import Button from "./base/Button";
-import InfoBox from "./base/InfoBox";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-`;
+import {Button,InfoBox,Container} from "../components/base/index";
 
 const ViewerContainer = styled.div`
   border: 2px solid #cbd5e1;

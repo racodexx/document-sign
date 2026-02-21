@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
-import InfoBox from "./base/InfoBox";
+import {InfoBox,Title,Container,  SubTitle, AppBenefits} from "../components/base/index";
 
 const DropZone = styled.div`
-  width: 50%;
+  width: 90%;
   min-height: 200px;
   border: 2px dashed ${(props) => (props.$isDragging ? "#4f46e5" : "#cbd5e1")};
   border-radius: 8px;
@@ -23,9 +23,8 @@ const DropZone = styled.div`
   }
 `;
 
-const UploadText = styled.p`
+const UploadText = styled.h2`
   color: #64748b;
-  font-size: 1rem;
   margin: 0.5rem 0;
   text-align: center;
 `;
@@ -39,6 +38,7 @@ const UploadIcon = styled.div`
 const HiddenInput = styled.input`
   display: none;
 `;
+
 
 const FileUpload = ({ onFileSelect }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -108,7 +108,10 @@ const FileUpload = ({ onFileSelect }) => {
   };
 
   return (
-    <>
+    <Container>
+     <Title>Upload your file</Title>
+     <SubTitle>Secure. Fast. No account needed.</SubTitle>
+     <AppBenefits/>
       <DropZone
         $isDragging={isDragging}
         onDragOver={handleDragOver}
@@ -130,12 +133,15 @@ const FileUpload = ({ onFileSelect }) => {
           accept=".pdf,.docx,.png,.jpg,.jpeg"
         />
       </DropZone>
+      <InfoBox type="info">
+        Your document is safe and automatically deleted after signing.
+      </InfoBox>
       {error && (
         <InfoBox type="error">
           {error}
         </InfoBox>
       )}
-    </>
+        </Container>
   );
 };
 export default FileUpload;

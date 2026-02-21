@@ -28,6 +28,7 @@ const typeStyles = {
 };
 
 const StyledInfoBox = styled.div`
+  width: 100%;
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
