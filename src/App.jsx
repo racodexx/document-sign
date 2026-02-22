@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { SignatureRegister,DocumentSign, FileUpload} from "./flows/index";
-import AppHeader from "./components/base/AppHeader";
+import { SignatureRegister, DocumentSign, FileUpload } from "./components";
 
 const StyledApp = styled.div`
   display: flex;
@@ -40,10 +39,14 @@ const App = () => {
     setStep(SignSteps.UPLOAD_FILE);
   };
 
-  const renderUploadFile = () => !file && <FileUpload onFileSelect={onSetFile} />;
-  const renderUploadedFile = () => file && <SignatureRegister onSignatureSave={onSetSignature} />;
-  const renderDocumentSign = () => signature && <DocumentSign signature={signature} document={file} onReset={onReset} />;
-   
+  const renderUploadFile = () =>
+    !file && <FileUpload onFileSelect={onSetFile} />;
+  const renderUploadedFile = () =>
+    file && <SignatureRegister onSignatureSave={onSetSignature} />;
+  const renderDocumentSign = () =>
+    signature && (
+      <DocumentSign signature={signature} document={file} onReset={onReset} />
+    );
 
   const render = () => {
     switch (step) {
@@ -58,14 +61,7 @@ const App = () => {
     }
   };
 
-  return (
-    <StyledApp>
-      <AppHeader/>
-      <div style={{paddingTop:'20px'}}>
-      {render()}
-      </div>
-    </StyledApp>
-  );
+  return <StyledApp>{render()}</StyledApp>;
 };
 
 export default App;
