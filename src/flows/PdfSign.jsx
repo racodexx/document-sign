@@ -2,17 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Document, Page, pdfjs } from "react-pdf";
 import { PDFDocument } from "pdf-lib";
-import Button from "./base/Button";
-import InfoBox from "./base/InfoBox";
+import {Button ,InfoBox, Container} from "../components/base/index";
 
 // Set up PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-`;
 
 const ViewerContainer = styled.div`
   border: 2px solid #cbd5e1;

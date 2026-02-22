@@ -1,22 +1,6 @@
-import styled from "styled-components";
-import PdfSign from "./PdfSign";
-import ImageSign from "./ImageSign";
-import InfoBox from "./base/InfoBox";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const Title = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0;
-`;
+import {PdfSign,ImageSign} from "./index";
+import {InfoBox,Container,Title} from "../components/base/index";
 
 const DocumentSign = ({ signature, document, onReset }) => {
   const fileType = document.type;
