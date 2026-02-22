@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
-import {InfoBox,Title,Container,  SubTitle, AppBenefits} from "./base/index";
+import { InfoBox, Title, Container, Subtitle } from "./base/index";
+import { AppBenefits } from "./index";
 
 const DropZone = styled.div`
   width: 90%;
@@ -39,7 +40,6 @@ const HiddenInput = styled.input`
   display: none;
 `;
 
-
 const FileUpload = ({ onFileSelect }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState(null);
@@ -51,7 +51,7 @@ const FileUpload = ({ onFileSelect }) => {
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "image/png",
     "image/jpeg",
-    "image/jpg"
+    "image/jpg",
   ];
 
   const validateFile = (file) => {
@@ -63,7 +63,9 @@ const FileUpload = ({ onFileSelect }) => {
     }
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      setError("The file you uploaded is not supported. Please upload a PDF, Word document, or an image file.");
+      setError(
+        "The file you uploaded is not supported. Please upload a PDF, Word document, or an image file.",
+      );
       return false;
     }
 
@@ -73,11 +75,11 @@ const FileUpload = ({ onFileSelect }) => {
   const handleFileChange = (event) => {
     setError(null); // Clear error on new upload attempt
     const file = event.target.files[0];
-    
+
     if (file && validateFile(file) && onFileSelect) {
       onFileSelect(file);
     }
-    
+
     // Reset input value to allow same file upload
     event.target.value = "";
   };
@@ -109,9 +111,9 @@ const FileUpload = ({ onFileSelect }) => {
 
   return (
     <Container>
-     <Title>Upload your file</Title>
-     <SubTitle>Secure. Fast. No account needed.</SubTitle>
-     <AppBenefits/>
+      <Title>Upload your file</Title>
+      <Subtitle>Secure. Fast. No account needed.</Subtitle>
+      <AppBenefits />
       <DropZone
         $isDragging={isDragging}
         onDragOver={handleDragOver}
@@ -136,12 +138,8 @@ const FileUpload = ({ onFileSelect }) => {
       <InfoBox type="info">
         Your document is safe and automatically deleted after signing.
       </InfoBox>
-      {error && (
-        <InfoBox type="error">
-          {error}
-        </InfoBox>
-      )}
-        </Container>
+      {error && <InfoBox type="error">{error}</InfoBox>}
+    </Container>
   );
 };
 export default FileUpload;

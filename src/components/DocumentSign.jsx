@@ -1,6 +1,5 @@
-
-import {PdfSign,ImageSign} from "./index";
-import {InfoBox,Container,Title} from "../components/base/index";
+import { PdfSign, ImageSign } from "./index";
+import { InfoBox, Container, Title } from "../components/base";
 
 const DocumentSign = ({ signature, document, onReset }) => {
   const fileType = document.type;
@@ -10,21 +9,13 @@ const DocumentSign = ({ signature, document, onReset }) => {
   return (
     <Container id="document-sign">
       <Title>Sign Your Document</Title>
-      
+
       {isPdf && (
-        <PdfSign 
-          file={document} 
-          signature={signature} 
-          onReset={onReset}
-        />
+        <PdfSign file={document} signature={signature} onReset={onReset} />
       )}
-      
+
       {isImage && (
-        <ImageSign 
-          file={document} 
-          signature={signature} 
-          onReset={onReset}
-        />
+        <ImageSign file={document} signature={signature} onReset={onReset} />
       )}
 
       {!isPdf && !isImage && (
