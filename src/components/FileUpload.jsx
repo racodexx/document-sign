@@ -135,9 +135,6 @@ const FileUpload = ({ onFileSelect }) => {
           accept=".pdf,.docx,.png,.jpg,.jpeg"
         />
       </DropZone>
-      <InfoBox type="info">
-        Your document is safe and automatically deleted after signing.
-      </InfoBox>
       {error && <InfoBox type="error">{error}</InfoBox>}
     </Container>
   );

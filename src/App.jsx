@@ -19,13 +19,15 @@ const App = () => {
   const [step, setStep] = useState(SignSteps.UPLOAD_FILE);
   const [file, setFile] = useState(null);
   const [signature, setSignature] = useState(null);
+  const [signingOtherDocument, setSigningOtherDocument] = useState(false);
 
   const onSetFile = (file) => {
     setFile(file);
-    if (!signature) {
-      setStep(SignSteps.CREATE_SIGNATURE);
-    } else {
+    if (signingOtherDocument) {
+      setSigningOtherDocument(false);
       setStep(SignSteps.SIGN_DOCUMENT);
+    } else {
+      setStep(SignSteps.CREATE_SIGNATURE);
     }
   };
 
@@ -34,28 +36,42 @@ const App = () => {
     setStep(SignSteps.SIGN_DOCUMENT);
   };
 
-  const onReset = () => {
+  const onResetFile = () => {
     setFile(null);
+    setSigningOtherDocument(true);
     setStep(SignSteps.UPLOAD_FILE);
   };
 
-  const renderUploadFile = () =>
-    !file && <FileUpload onFileSelect={onSetFile} />;
-  const renderUploadedFile = () =>
-    file && <SignatureRegister onSignatureSave={onSetSignature} />;
-  const renderDocumentSign = () =>
-    signature && (
-      <DocumentSign signature={signature} document={file} onReset={onReset} />
-    );
+  const onBack = () => {
+    if (step === SignSteps.SIGN_DOCUMENT) {
+      setStep(SignSteps.CREATE_SIGNATURE);
+    } else if (step === SignSteps.CREATE_SIGNATURE) {
+      setFile(null);
+      setStep(SignSteps.UPLOAD_FILE);
+    }
+  };
 
   const render = () => {
     switch (step) {
       case SignSteps.UPLOAD_FILE:
-        return renderUploadFile();
+        return <FileUpload onFileSelect={onSetFile} />;
       case SignSteps.CREATE_SIGNATURE:
-        return renderUploadedFile();
+        return (
+          <SignatureRegister
+            signature={signature}
+            onSignatureSave={onSetSignature}
+            onBack={onBack}
+          />
+        );
       case SignSteps.SIGN_DOCUMENT:
-        return renderDocumentSign();
+        return (
+          <DocumentSign
+            signature={signature}
+            document={file}
+            onReset={onResetFile}
+            onBack={onBack}
+          />
+        );
       default:
         return;
     }

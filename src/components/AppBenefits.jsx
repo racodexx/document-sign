@@ -65,7 +65,7 @@ const AppBenefits = () => {
             />
           </svg>
         </Icon>
-        <span>Secure & encrypted</span>
+        <span>No data stored</span>
       </Benefit>
 
       <Separtor />

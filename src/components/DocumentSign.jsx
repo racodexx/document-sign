@@ -1,7 +1,7 @@
 import { PdfSign, ImageSign } from "./index";
 import { InfoBox, Container, Title } from "../components/base";
 
-const DocumentSign = ({ signature, document, onReset }) => {
+const DocumentSign = ({ signature, document, onReset, onBack }) => {
   const fileType = document.type;
   const isPdf = fileType === "application/pdf";
   const isImage = fileType.startsWith("image/");
@@ -11,11 +11,11 @@ const DocumentSign = ({ signature, document, onReset }) => {
       <Title>Sign Your Document</Title>
 
       {isPdf && (
-        <PdfSign file={document} signature={signature} onReset={onReset} />
+        <PdfSign file={document} signature={signature} onReset={onReset} onBack={onBack}/>
       )}
 
       {isImage && (
-        <ImageSign file={document} signature={signature} onReset={onReset} />
+        <ImageSign file={document} signature={signature} onReset={onReset} onBack={onBack}/>
       )}
 
       {!isPdf && !isImage && (

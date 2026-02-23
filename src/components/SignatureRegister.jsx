@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-import {Button,InfoBox,Container,Title} from "./base/index";
-
+import SignaturePad from "signature_pad";
+import { Button, InfoBox, Container, Title } from "./base/index";
 
 const CanvasContainer = styled.div`
   border: 2px solid #cbd5e1;
@@ -23,85 +23,167 @@ const ButtonGroup = styled.div`
   justify-content: flex-end;
 `;
 
-const SignatureRegister = ({ onSignatureSave }) => {
+const ControlsContainer = styled.div`
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+`;
+
+const ControlGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const Label = styled.label`
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+`;
+
+const ColorPicker = styled.input`
+  width: 60px;
+  height: 40px;
+  border: 2px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  &::-webkit-color-swatch-wrapper {
+    padding: 2px;
+  }
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+  }
+`;
+
+const ColorPresets = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+`;
+
+const Slider = styled.input`
+  width: 150px;
+  height: 6px;
+  border-radius: 3px;
+  background: #cbd5e1;
+  outline: none;
+  cursor: pointer;
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+  }
+  &::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    border: none;
+  }
+`;
+
+const SliderValue = styled.span`
+  font-size: 0.875rem;
+  color: #64748b;
+  min-width: 40px;
+`;
+
+const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
   const canvasRef = useRef(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const signaturePadRef = useRef(null);
   const [isEmpty, setIsEmpty] = useState(true);
+  const [penColor, setPenColor] = useState("#1e40af");
+  const [penWidth, setPenWidth] = useState(2);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-
     // Set canvas size
     canvas.width = 800;
     canvas.height = 300;
 
-    // Configure drawing style
-    ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 2;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    // Initialize SignaturePad
+    signaturePadRef.current = new SignaturePad(canvas, {
+      penColor: penColor,
+      minWidth: penWidth * 0.5,
+      maxWidth: penWidth * 1.5,
+      velocityFilterWeight: 0.7,
+    });
+
+    // Listen for drawing events
+    signaturePadRef.current.addEventListener("beginStroke", () => {
+      setIsEmpty(false);
+    });
+
+    return () => {
+      if (signaturePadRef.current) {
+        signaturePadRef.current.off();
+      }
+    };
   }, []);
 
-  const startDrawing = (e) => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const rect = canvas.getBoundingClientRect();
+  // Load existing signature if provided
+  useEffect(() => {
+    if (signature && signaturePadRef.current) {
+      signaturePadRef.current.fromDataURL(signature.dataUrl || signature);
+      setIsEmpty(false);
+    }
+  }, []);
 
-    const x = e.clientX
-      ? e.clientX - rect.left
-      : e.touches[0].clientX - rect.left;
-    const y = e.clientY
-      ? e.clientY - rect.top
-      : e.touches[0].clientY - rect.top;
+  // Update pen color when changed
+  useEffect(() => {
+    if (signaturePadRef.current) {
+      signaturePadRef.current.penColor = penColor;
+    }
+  }, [penColor]);
 
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    setIsDrawing(true);
-    setIsEmpty(false);
+  // Update pen width when changed
+  useEffect(() => {
+    if (signaturePadRef.current) {
+      signaturePadRef.current.minWidth = penWidth * 0.5;
+      signaturePadRef.current.maxWidth = penWidth * 1.5;
+    }
+  }, [penWidth]);
+
+  const handleColorChange = (color) => {
+    setPenColor(color);
   };
 
-  const draw = (e) => {
-    if (!isDrawing) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const rect = canvas.getBoundingClientRect();
-
-    const x = e.clientX
-      ? e.clientX - rect.left
-      : e.touches[0].clientX - rect.left;
-    const y = e.clientY
-      ? e.clientY - rect.top
-      : e.touches[0].clientY - rect.top;
-
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  };
-
-  const stopDrawing = () => {
-    setIsDrawing(false);
+  const handleWidthChange = (e) => {
+    setPenWidth(parseFloat(e.target.value));
   };
 
   const clearSignature = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setIsEmpty(true);
+    if (signaturePadRef.current) {
+      signaturePadRef.current.clear();
+      setIsEmpty(true);
+    }
   };
 
   const saveSignature = () => {
-    if (isEmpty) return;
-
-    const canvas = canvasRef.current;
+    if (
+      isEmpty ||
+      !signaturePadRef.current ||
+      signaturePadRef.current.isEmpty()
+    )
+      return;
 
     // Export as PNG with transparent background
-    const signatureDataUrl = canvas.toDataURL("image/png");
+    const signatureDataUrl = signaturePadRef.current.toDataURL("image/png");
 
     // Also create a blob for file operations if needed
-    canvas.toBlob((blob) => {
+    signaturePadRef.current.canvas.toBlob((blob) => {
       if (onSignatureSave) {
         onSignatureSave({
           dataUrl: signatureDataUrl,
@@ -120,20 +202,40 @@ const SignatureRegister = ({ onSignatureSave }) => {
         You can use this signature to sign documents later.
       </InfoBox>
 
+      <ControlsContainer>
+        <ControlGroup>
+          <Label>Pen Color</Label>
+          <ColorPicker
+            type="color"
+            value={penColor}
+            onChange={(e) => handleColorChange(e.target.value)}
+          />
+        </ControlGroup>
+
+        <ControlGroup>
+          <Label>Pen Thickness</Label>
+          <ColorPresets>
+            <Slider
+              type="range"
+              min="0.5"
+              max="5"
+              step="0.5"
+              value={penWidth}
+              onChange={handleWidthChange}
+            />
+            <SliderValue>{penWidth.toFixed(1)}px</SliderValue>
+          </ColorPresets>
+        </ControlGroup>
+      </ControlsContainer>
+
       <CanvasContainer>
-        <Canvas
-          ref={canvasRef}
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onMouseLeave={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={stopDrawing}
-        />
+        <Canvas ref={canvasRef} />
       </CanvasContainer>
 
       <ButtonGroup>
+         <Button variant="secondary" onClick={onBack}>
+          Back to file upload
+        </Button>
         <Button variant="secondary" onClick={clearSignature}>
           Retry
         </Button>

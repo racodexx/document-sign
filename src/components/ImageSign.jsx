@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
-import {Button,InfoBox,Container} from "./base/index";
+import { Button, InfoBox, Container } from "./base/index";
 
 const ViewerContainer = styled.div`
   border: 2px solid #cbd5e1;
@@ -31,7 +31,7 @@ const SignatureWrapper = styled.div`
   position: absolute;
   pointer-events: auto;
   z-index: 10;
-  ${props => props.$isDragging ? 'opacity: 0.7;' : ''}
+  ${(props) => (props.$isDragging ? "opacity: 0.7;" : "")}
 `;
 
 const SignatureOverlay = styled.img`
@@ -52,25 +52,25 @@ const ResizeHandle = styled.div`
   border-radius: 50%;
   pointer-events: auto;
   z-index: 11;
-  
+
   &.top-left {
     top: -6px;
     left: -6px;
     cursor: nwse-resize;
   }
-  
+
   &.top-right {
     top: -6px;
     right: -6px;
     cursor: nesw-resize;
   }
-  
+
   &.bottom-left {
     bottom: -6px;
     left: -6px;
     cursor: nesw-resize;
   }
-  
+
   &.bottom-right {
     bottom: -6px;
     right: -6px;
@@ -84,15 +84,28 @@ const ButtonGroup = styled.div`
   justify-content: flex-end;
 `;
 
-const ImageSign = ({ file, signature, onReset }) => {
+const ImageSign = ({ file, signature, onReset, onBack }) => {
   const [imageUrl, setImageUrl] = useState(null);
-  const [signaturePosition, setSignaturePosition] = useState({ x: 100, y: 100 });
-  const [signatureSize, setSignatureSize] = useState({ width: 200, height: 80 });
+  const [signaturePosition, setSignaturePosition] = useState({
+    x: 100,
+    y: 100,
+  });
+  const [signatureSize, setSignatureSize] = useState({
+    width: 200,
+    height: 80,
+  });
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeHandle, setResizeHandle] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0, posX: 0, posY: 0 });
+  const [resizeStart, setResizeStart] = useState({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    posX: 0,
+    posY: 0,
+  });
   const [success, setSuccess] = useState(false);
   const imageRef = useRef(null);
   const canvasRef = useRef(null);
@@ -111,7 +124,7 @@ const ImageSign = ({ file, signature, onReset }) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setDragOffset({
       x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      y: e.clientY - rect.top,
     });
   };
 
@@ -125,7 +138,7 @@ const ImageSign = ({ file, signature, onReset }) => {
       width: signatureSize.width,
       height: signatureSize.height,
       posX: signaturePosition.x,
-      posY: signaturePosition.y
+      posY: signaturePosition.y,
     });
   };
 
@@ -139,7 +152,7 @@ const ImageSign = ({ file, signature, onReset }) => {
 
       setSignaturePosition({
         x: Math.max(0, Math.min(newX, imageRect.width - signatureSize.width)),
-        y: Math.max(0, Math.min(newY, imageRect.height - signatureSize.height))
+        y: Math.max(0, Math.min(newY, imageRect.height - signatureSize.height)),
       });
     } else if (isResizing) {
       const deltaX = e.clientX - resizeStart.x;
@@ -153,23 +166,23 @@ const ImageSign = ({ file, signature, onReset }) => {
 
       // Calculate new dimensions based on which handle is being dragged
       switch (resizeHandle) {
-        case 'top-left':
+        case "top-left":
           newWidth = resizeStart.width - deltaX;
           newHeight = resizeStart.height - deltaY;
           newX = resizeStart.posX + deltaX;
           newY = resizeStart.posY + deltaY;
           break;
-        case 'top-right':
+        case "top-right":
           newWidth = resizeStart.width + deltaX;
           newHeight = resizeStart.height - deltaY;
           newY = resizeStart.posY + deltaY;
           break;
-        case 'bottom-left':
+        case "bottom-left":
           newWidth = resizeStart.width - deltaX;
           newHeight = resizeStart.height + deltaY;
           newX = resizeStart.posX + deltaX;
           break;
-        case 'bottom-right':
+        case "bottom-right":
           newWidth = resizeStart.width + deltaX;
           newHeight = resizeStart.height + deltaY;
           break;
@@ -209,8 +222,8 @@ const ImageSign = ({ file, signature, onReset }) => {
   const handleSaveSignedImage = () => {
     if (!signature || !imageRef.current) return;
 
-    const canvas = window.document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = window.document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
     const img = imageRef.current;
 
     // Set canvas size to match the image's natural size
@@ -238,14 +251,14 @@ const ImageSign = ({ file, signature, onReset }) => {
       // Convert canvas to blob and download
       canvas.toBlob((blob) => {
         const url = URL.createObjectURL(blob);
-        const downloadLink = window.document.createElement('a');
+        const downloadLink = window.document.createElement("a");
         downloadLink.href = url;
-        
+
         // Determine file extension
-        const extension = file.type.split('/')[1];
+        const extension = file.type.split("/")[1];
         downloadLink.download = `signed_${file.name || `image.${extension}`}`;
         downloadLink.click();
-        
+
         URL.revokeObjectURL(url);
         setSuccess(true);
       }, file.type);
@@ -265,7 +278,8 @@ const ImageSign = ({ file, signature, onReset }) => {
   return (
     <Container>
       <InfoBox type="info">
-        Drag the signature to position it, or use the corner handles to resize it. Then click "Sign & Download".
+        Drag the signature to position it, or use the corner handles to resize
+        it. Then click "Sign & Download".
       </InfoBox>
 
       <ViewerContainer
@@ -282,14 +296,14 @@ const ImageSign = ({ file, signature, onReset }) => {
                 alt="Document"
                 draggable={false}
               />
-              
+
               {signature && (
                 <SignatureWrapper
                   style={{
                     left: `${signaturePosition.x}px`,
                     top: `${signaturePosition.y}px`,
                     width: `${signatureSize.width}px`,
-                    height: `${signatureSize.height}px`
+                    height: `${signatureSize.height}px`,
                   }}
                   $isDragging={isDragging || isResizing}
                 >
@@ -299,21 +313,23 @@ const ImageSign = ({ file, signature, onReset }) => {
                     onMouseDown={handleSignatureMouseDown}
                     draggable={false}
                   />
-                  <ResizeHandle 
-                    className="top-left" 
-                    onMouseDown={(e) => handleResizeMouseDown(e, 'top-left')}
+                  <ResizeHandle
+                    className="top-left"
+                    onMouseDown={(e) => handleResizeMouseDown(e, "top-left")}
                   />
-                  <ResizeHandle 
-                    className="top-right" 
-                    onMouseDown={(e) => handleResizeMouseDown(e, 'top-right')}
+                  <ResizeHandle
+                    className="top-right"
+                    onMouseDown={(e) => handleResizeMouseDown(e, "top-right")}
                   />
-                  <ResizeHandle 
-                    className="bottom-left" 
-                    onMouseDown={(e) => handleResizeMouseDown(e, 'bottom-left')}
+                  <ResizeHandle
+                    className="bottom-left"
+                    onMouseDown={(e) => handleResizeMouseDown(e, "bottom-left")}
                   />
-                  <ResizeHandle 
-                    className="bottom-right" 
-                    onMouseDown={(e) => handleResizeMouseDown(e, 'bottom-right')}
+                  <ResizeHandle
+                    className="bottom-right"
+                    onMouseDown={(e) =>
+                      handleResizeMouseDown(e, "bottom-right")
+                    }
                   />
                 </SignatureWrapper>
               )}
@@ -323,12 +339,13 @@ const ImageSign = ({ file, signature, onReset }) => {
       </ViewerContainer>
 
       <ButtonGroup>
+        <Button variant="secondary" onClick={onBack}>
+          Back to signature
+        </Button>
         <Button variant="secondary" onClick={onReset}>
           Upload Different File
         </Button>
-        <Button onClick={handleSaveSignedImage}>
-          Sign & Download
-        </Button>
+        <Button onClick={handleSaveSignedImage}>Sign & Download</Button>
       </ButtonGroup>
 
       {success && (
@@ -337,7 +354,7 @@ const ImageSign = ({ file, signature, onReset }) => {
         </InfoBox>
       )}
 
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
+      <canvas ref={canvasRef} style={{ display: "none" }} />
     </Container>
   );
 };
