@@ -137,7 +137,7 @@ const FileUpload = ({ onFileSelect }) => {
           ref={fileInputRef}
           type="file"
           onChange={handleFileChange}
-          accept=".pdf,.docx,.png,.jpg,.jpeg"
+          accept=".pdf,.png,.jpg,.jpeg"
         />
       </DropZone>
       {error && <InfoBox type="error">{error}</InfoBox>}
