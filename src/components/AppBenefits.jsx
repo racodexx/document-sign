@@ -97,7 +97,7 @@ const AppBenefits = () => {
             <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.8" />
           </svg>
         </Icon>
-        <span>Supports PDF, DOC, DOCX</span>
+        <span>Supports PDF and images</span>
       </Benefit>
     </Description>
   );

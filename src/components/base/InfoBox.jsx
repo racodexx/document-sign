@@ -28,7 +28,6 @@ const typeStyles = {
 };
 
 const StyledInfoBox = styled.div`
-  width: 100%;
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -52,9 +51,7 @@ const IconWrapper = styled.div`
   flex-shrink: 0;
 `;
 
-const Content = styled.div`
-  flex: 1;
-`;
+const Content = styled.div``;
 
 // type can be 'success', 'error', 'warning', 'info'
 const InfoBox = ({ type = 'info', children }) => {

@@ -13,8 +13,6 @@ const ViewerContainer = styled.div`
   background-color: #f8fafc;
   padding: 2rem;
   position: relative;
-  overflow: auto;
-  max-height: 70vh;
   display: flex;
   justify-content: center;
 `;

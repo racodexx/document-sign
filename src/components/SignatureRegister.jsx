@@ -103,7 +103,7 @@ const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
   const signaturePadRef = useRef(null);
   const [isEmpty, setIsEmpty] = useState(true);
   const [penColor, setPenColor] = useState("#1e40af");
-  const [penWidth, setPenWidth] = useState(2);
+  const [penWidth, setPenWidth] = useState(5);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -194,7 +194,7 @@ const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
   };
 
   return (
-    <Container>
+    <Container id="signature-register">
       <Title>Create Your Signature</Title>
 
       <InfoBox type="info">
@@ -217,8 +217,8 @@ const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
           <ColorPresets>
             <Slider
               type="range"
-              min="0.5"
-              max="5"
+              min="3"
+              max="10"
               step="0.5"
               value={penWidth}
               onChange={handleWidthChange}

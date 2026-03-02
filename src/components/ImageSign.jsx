@@ -9,8 +9,6 @@ const ViewerContainer = styled.div`
   background-color: #f8fafc;
   padding: 2rem;
   position: relative;
-  overflow: auto;
-  max-height: 70vh;
   display: flex;
   justify-content: center;
 `;
@@ -106,7 +104,6 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
     posX: 0,
     posY: 0,
   });
-  const [success, setSuccess] = useState(false);
   const imageRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -260,7 +257,7 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
         downloadLink.click();
 
         URL.revokeObjectURL(url);
-        setSuccess(true);
+        console.info("Signed image generated and download initiated.");
       }, file.type);
     };
 
@@ -347,13 +344,6 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
         </Button>
         <Button onClick={handleSaveSignedImage}>Sign & Download</Button>
       </ButtonGroup>
-
-      {success && (
-        <InfoBox type="success">
-          Image signed successfully! The file has been downloaded.
-        </InfoBox>
-      )}
-
       <canvas ref={canvasRef} style={{ display: "none" }} />
     </Container>
   );

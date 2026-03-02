@@ -3,8 +3,12 @@ import styled from "styled-components";
 import { InfoBox, Title, Container, Subtitle } from "./base/index";
 import { AppBenefits } from "./index";
 
+const StyledContainter = styled(Container)`
+  height: 70vh;
+  justify-content: center;
+`;
+
 const DropZone = styled.div`
-  width: 90%;
   min-height: 200px;
   border: 2px dashed ${(props) => (props.$isDragging ? "#4f46e5" : "#cbd5e1")};
   border-radius: 8px;
@@ -110,7 +114,7 @@ const FileUpload = ({ onFileSelect }) => {
   };
 
   return (
-    <Container>
+    <StyledContainter>
       <Title>Upload your file</Title>
       <Subtitle>Secure. Fast. No account needed.</Subtitle>
       <AppBenefits />
@@ -136,7 +140,7 @@ const FileUpload = ({ onFileSelect }) => {
         />
       </DropZone>
       {error && <InfoBox type="error">{error}</InfoBox>}
-    </Container>
+    </StyledContainter>
   );
 };
 export default FileUpload;

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { SignatureRegister, DocumentSign, FileUpload } from "./components";
+import TradeMark from "./components/TradeMark";
 
 const StyledApp = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 20px 10px;
 `;
 
 const SignSteps = {
@@ -77,7 +79,12 @@ const App = () => {
     }
   };
 
-  return <StyledApp>{render()}</StyledApp>;
+  return (
+    <StyledApp id="main-view">
+      <TradeMark />
+      {render()}
+    </StyledApp>
+  );
 };
 
 export default App;
