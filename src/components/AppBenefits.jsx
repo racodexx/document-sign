@@ -21,6 +21,7 @@ const Icon = styled.span`
   width: 20px;
   height: 20px;
   color: #3b82f6;
+  flex-shrink: 0;
 
   .svg {
     width: 18px;
