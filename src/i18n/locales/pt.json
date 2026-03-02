@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "Assinatura de Documento",
+    "trademark": "@RACODEX 2026"
+  },
+  "fileUpload": {
+    "title": "Envie seu arquivo",
+    "subtitle": "Seguro. Rápido. Sem necessidade de conta.",
+    "clickToUpload": "Clique para enviar",
+    "dragAndDrop": "ou arraste e solte",
+    "fileTypes": "PDF, Imagens (máx. {{size}}MB)",
+    "errors": {
+      "fileTooLarge": "O arquivo é muito grande. O tamanho máximo é {{size}}MB.",
+      "unsupportedType": "O arquivo enviado não é suportado. Por favor, envie um PDF, documento Word ou arquivo de imagem."
+    }
+  },
+  "benefits": {
+    "noDataStored": "Nenhum dado armazenado",
+    "signInSeconds": "Assine em segundos",
+    "allFormats": "Todos os formatos"
+  },
+  "signature": {
+    "title": "Crie sua assinatura",
+    "instructions": "Desenhe sua assinatura na caixa abaixo usando seu mouse ou tela sensível ao toque. Você pode usar esta assinatura para assinar documentos posteriormente.",
+    "penColor": "Cor da caneta",
+    "penThickness": "Espessura da caneta",
+    "backToUpload": "Voltar ao envio",
+    "retry": "Tentar novamente",
+    "applyToDocument": "Aplicar ao documento"
+  },
+  "documentSign": {
+    "title": "Assine seu documento",
+    "instructions": "Arraste a assinatura para posicioná-la ou use as alças nos cantos para redimensioná-la. Em seguida, clique em \"Assinar e baixar\".",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "page": "Página {{current}} de {{total}}",
+    "backToSignature": "Voltar à assinatura",
+    "uploadDifferent": "Enviar arquivo diferente",
+    "signDownload": "Assinar e baixar",
+    "success": "Documento assinado com sucesso! O arquivo foi baixado.",
+    "errors": {
+      "noSignature": "Por favor, crie sua assinatura primeiro antes de assinar documentos.",
+      "unsupportedType": "Tipo de arquivo não suportado. Por favor, envie um arquivo PDF ou de imagem."
+    }
+  },
+  "language": {
+    "select": "Idioma"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "文档签名",
+    "trademark": "@RACODEX 2026"
+  },
+  "fileUpload": {
+    "title": "上传您的文件",
+    "subtitle": "安全。快速。无需账户。",
+    "clickToUpload": "点击上传",
+    "dragAndDrop": "或拖放",
+    "fileTypes": "PDF、图片（最大{{size}}MB）",
+    "errors": {
+      "fileTooLarge": "文件太大。最大大小为{{size}}MB。",
+      "unsupportedType": "不支持您上传的文件。请上传PDF、Word文档或图片文件。"
+    }
+  },
+  "benefits": {
+    "noDataStored": "不存储数据",
+    "signInSeconds": "几秒钟内签名",
+    "allFormats": "所有格式"
+  },
+  "signature": {
+    "title": "创建您的签名",
+    "instructions": "使用鼠标或触摸屏在下面的框中绘制您的签名。您可以使用此签名稍后签署文档。",
+    "penColor": "笔颜色",
+    "penThickness": "笔粗细",
+    "backToUpload": "返回上传",
+    "retry": "重试",
+    "applyToDocument": "应用到文档"
+  },
+  "documentSign": {
+    "title": "签署您的文档",
+    "instructions": "拖动签名以定位它，或使用角落手柄调整其大小。然后点击\"签名并下载\"。",
+    "previous": "上一页",
+    "next": "下一页",
+    "page": "第{{current}}页，共{{total}}页",
+    "backToSignature": "返回签名",
+    "uploadDifferent": "上传其他文件",
+    "signDownload": "签名并下载",
+    "success": "文档签名成功！文件已下载。",
+    "errors": {
+      "noSignature": "请先创建您的签名，然后再签署文档。",
+      "unsupportedType": "不支持的文件类型。请上传PDF或图片文件。"
+    }
+  },
+  "language": {
+    "select": "语言"
+  }
+}
