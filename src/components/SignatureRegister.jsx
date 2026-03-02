@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 import SignaturePad from "signature_pad";
 import { Button, InfoBox, Container, Title } from "./base/index";
 
@@ -99,6 +100,7 @@ const SliderValue = styled.span`
 `;
 
 const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
+  const { t } = useTranslation();
   const canvasRef = useRef(null);
   const signaturePadRef = useRef(null);
   const [isEmpty, setIsEmpty] = useState(true);
@@ -195,16 +197,15 @@ const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
 
   return (
     <Container id="signature-register">
-      <Title>Create Your Signature</Title>
+      <Title>{t('signature.title')}</Title>
 
       <InfoBox type="info">
-        Draw your signature in the box below using your mouse or touchscreen.
-        You can use this signature to sign documents later.
+        {t('signature.instructions')}
       </InfoBox>
 
       <ControlsContainer>
         <ControlGroup>
-          <Label>Pen Color</Label>
+          <Label>{t('signature.penColor')}</Label>
           <ColorPicker
             type="color"
             value={penColor}
@@ -213,7 +214,7 @@ const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
         </ControlGroup>
 
         <ControlGroup>
-          <Label>Pen Thickness</Label>
+          <Label>{t('signature.penThickness')}</Label>
           <ColorPresets>
             <Slider
               type="range"
@@ -234,13 +235,13 @@ const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
 
       <ButtonGroup>
          <Button variant="secondary" onClick={onBack}>
-          Back to file upload
+          {t('signature.backToUpload')}
         </Button>
         <Button variant="secondary" onClick={clearSignature}>
-          Retry
+          {t('signature.retry')}
         </Button>
         <Button onClick={saveSignature} disabled={isEmpty}>
-          Apply to document
+          {t('signature.applyToDocument')}
         </Button>
       </ButtonGroup>
     </Container>

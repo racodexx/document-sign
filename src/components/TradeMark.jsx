@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 const TradeMarkContainer = styled.div`
   position: absolute;
@@ -7,6 +8,7 @@ const TradeMarkContainer = styled.div`
 `;
 
 const TradeMark = () => {
-  return <TradeMarkContainer>@RACODEX 2026</TradeMarkContainer>;
+  const { t } = useTranslation();
+  return <TradeMarkContainer>{t('app.trademark')}</TradeMarkContainer>;
 };
 export default TradeMark;

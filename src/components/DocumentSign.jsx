@@ -1,14 +1,16 @@
+import { useTranslation } from "react-i18next";
 import { PdfSign, ImageSign } from "./index";
 import { InfoBox, Container, Title } from "../components/base";
 
 const DocumentSign = ({ signature, document, onReset, onBack }) => {
+  const { t } = useTranslation();
   const fileType = document.type;
   const isPdf = fileType === "application/pdf";
   const isImage = fileType.startsWith("image/");
 
   return (
     <Container id="document-sign">
-      <Title>Sign Your Document</Title>
+      <Title>{t('documentSign.title')}</Title>
 
       {isPdf && (
         <PdfSign file={document} signature={signature} onReset={onReset} onBack={onBack}/>
@@ -20,7 +22,7 @@ const DocumentSign = ({ signature, document, onReset, onBack }) => {
 
       {!isPdf && !isImage && (
         <InfoBox type="error">
-          Unsupported file type. Please upload a PDF or image file.
+          {t('documentSign.errors.unsupportedType')}
         </InfoBox>
       )}
     </Container>

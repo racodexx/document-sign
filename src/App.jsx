@@ -1,7 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { SignatureRegister, DocumentSign, FileUpload } from "./components";
+import { SignatureRegister, DocumentSign, FileUpload, LanguageSelector } from "./components";
 import TradeMark from "./components/TradeMark";
+import "./i18n/config";
 
 const StyledApp = styled.div`
   display: flex;
@@ -81,6 +82,7 @@ const App = () => {
 
   return (
     <StyledApp id="main-view">
+      <LanguageSelector />
       <TradeMark />
       {render()}
     </StyledApp>

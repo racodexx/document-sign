@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 import { InfoBox, Title, Container, Subtitle } from "./base/index";
 import { AppBenefits } from "./index";
 
@@ -45,6 +46,7 @@ const HiddenInput = styled.input`
 `;
 
 const FileUpload = ({ onFileSelect }) => {
+  const { t } = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
@@ -63,14 +65,12 @@ const FileUpload = ({ onFileSelect }) => {
     if (!file) return false;
 
     if (file.size > MAX_FILE_SIZE) {
-      setError(`File is too large. Maximum size is ${Max_FILE_SIZE_MB}MB.`);
+      setError(t('fileUpload.errors.fileTooLarge', { size: Max_FILE_SIZE_MB }));
       return false;
     }
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      setError(
-        "The file you uploaded is not supported. Please upload a PDF, Word document, or an image file.",
-      );
+      setError(t('fileUpload.errors.unsupportedType'));
       return false;
     }
 
@@ -116,8 +116,8 @@ const FileUpload = ({ onFileSelect }) => {
 
   return (
     <StyledContainter>
-      <Title>Upload your file</Title>
-      <Subtitle>Secure. Fast. No account needed.</Subtitle>
+      <Title>{t('fileUpload.title')}</Title>
+      <Subtitle>{t('fileUpload.subtitle')}</Subtitle>
       <AppBenefits />
       <DropZone
         $isDragging={isDragging}
@@ -128,10 +128,10 @@ const FileUpload = ({ onFileSelect }) => {
       >
         <UploadIcon>📄</UploadIcon>
         <UploadText>
-          <strong>Click to upload</strong> or drag and drop
+          <strong>{t('fileUpload.clickToUpload')}</strong> {t('fileUpload.dragAndDrop')}
         </UploadText>
         <UploadText style={{ fontSize: "0.875rem" }}>
-          {`PDF, Images (max. ${Max_FILE_SIZE_MB}MB)`}
+          {t('fileUpload.fileTypes', { size: Max_FILE_SIZE_MB })}
         </UploadText>
         <HiddenInput
           ref={fileInputRef}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
 import { PDFDocument } from "pdf-lib";
 import { Button, InfoBox, Container } from "./base/index";
@@ -96,6 +97,7 @@ const PageInfo = styled.span`
 `;
 
 const PdfSign = ({ file, signature, onReset, onBack }) => {
+  const { t } = useTranslation();
   const [numPages, setNumPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [signaturePosition, setSignaturePosition] = useState({
@@ -300,7 +302,7 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
   if (!signature) {
     return (
       <InfoBox type="warning">
-        Please create your signature first before signing documents.
+        {t('documentSign.errors.noSignature')}
       </InfoBox>
     );
   }
@@ -308,8 +310,7 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
   return (
     <Container>
       <InfoBox type="info">
-        Drag the signature to position it, or use the corner handles to resize
-        it. Then click "Sign & Download".
+        {t('documentSign.instructions')}
       </InfoBox>
 
       <ViewerContainer
@@ -370,34 +371,34 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
             onClick={handlePreviousPage}
             disabled={currentPage <= 1}
           >
-            Previous
+            {t('documentSign.previous')}
           </Button>
           <PageInfo>
-            Page {currentPage} of {numPages}
+            {t('documentSign.page', { current: currentPage, total: numPages })}
           </PageInfo>
           <Button
             variant="secondary"
             onClick={handleNextPage}
             disabled={currentPage >= numPages}
           >
-            Next
+            {t('documentSign.next')}
           </Button>
         </Controls>
 
         <Controls>
           <Button variant="secondary" onClick={onBack}>
-            Back to signature
+            {t('documentSign.backToSignature')}
           </Button>
           <Button variant="secondary" onClick={onReset}>
-            Upload Different File
+            {t('documentSign.uploadDifferent')}
           </Button>
-          <Button onClick={handleSaveSignedPdf}>Sign & Download</Button>
+          <Button onClick={handleSaveSignedPdf}>{t('documentSign.signDownload')}</Button>
         </Controls>
       </ButtonGroup>
 
       {success && (
         <InfoBox type="success">
-          PDF signed successfully! The file has been downloaded.
+          {t('documentSign.success')}
         </InfoBox>
       )}
     </Container>

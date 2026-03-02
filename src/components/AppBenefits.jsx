@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 const Description = styled.div`
   display: inline-flex;
@@ -45,6 +46,8 @@ const Separtor = styled.div`
 `;
 
 const AppBenefits = () => {
+  const { t } = useTranslation();
+  
   return (
     <Description>
       <Benefit>
@@ -66,7 +69,7 @@ const AppBenefits = () => {
             />
           </svg>
         </Icon>
-        <span>No data stored</span>
+        <span>{t('benefits.noDataStored')}</span>
       </Benefit>
 
       <Separtor />
@@ -82,7 +85,7 @@ const AppBenefits = () => {
             />
           </svg>
         </Icon>
-        <span>Sign in seconds</span>
+        <span>{t('benefits.signInSeconds')}</span>
       </Benefit>
 
       <Separtor />
@@ -98,7 +101,7 @@ const AppBenefits = () => {
             <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.8" />
           </svg>
         </Icon>
-        <span>Supports PDF and images</span>
+        <span>{t('benefits.allFormats')}</span>
       </Benefit>
     </Description>
   );

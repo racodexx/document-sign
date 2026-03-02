@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 import { Button, InfoBox, Container } from "./base/index";
 
@@ -83,6 +84,7 @@ const ButtonGroup = styled.div`
 `;
 
 const ImageSign = ({ file, signature, onReset, onBack }) => {
+  const { t } = useTranslation();
   const [imageUrl, setImageUrl] = useState(null);
   const [signaturePosition, setSignaturePosition] = useState({
     x: 100,
@@ -267,7 +269,7 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
   if (!signature) {
     return (
       <InfoBox type="warning">
-        Please create your signature first before signing documents.
+        {t('documentSign.errors.noSignature')}
       </InfoBox>
     );
   }
@@ -275,8 +277,7 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
   return (
     <Container>
       <InfoBox type="info">
-        Drag the signature to position it, or use the corner handles to resize
-        it. Then click "Sign & Download".
+        {t('documentSign.instructions')}
       </InfoBox>
 
       <ViewerContainer
@@ -337,12 +338,12 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
 
       <ButtonGroup>
         <Button variant="secondary" onClick={onBack}>
-          Back to signature
+          {t('documentSign.backToSignature')}
         </Button>
         <Button variant="secondary" onClick={onReset}>
-          Upload Different File
+          {t('documentSign.uploadDifferent')}
         </Button>
-        <Button onClick={handleSaveSignedImage}>Sign & Download</Button>
+        <Button onClick={handleSaveSignedImage}>{t('documentSign.signDownload')}</Button>
       </ButtonGroup>
       <canvas ref={canvasRef} style={{ display: "none" }} />
     </Container>
