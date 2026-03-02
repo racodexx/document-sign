@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "Signer le Document",
+    "trademark": "@RACODEX 2026"
+  },
+  "fileUpload": {
+    "title": "Téléchargez votre fichier",
+    "subtitle": "Sécurisé. Rapide. Aucun compte nécessaire.",
+    "clickToUpload": "Cliquez pour télécharger",
+    "dragAndDrop": "ou glisser-déposer",
+    "fileTypes": "PDF, Images (max. {{size}}Mo)",
+    "errors": {
+      "fileTooLarge": "Le fichier est trop volumineux. La taille maximale est de {{size}}Mo.",
+      "unsupportedType": "Le fichier que vous avez téléchargé n'est pas pris en charge. Veuillez télécharger un PDF, un document Word ou un fichier image."
+    }
+  },
+  "benefits": {
+    "noDataStored": "Aucune donnée stockée",
+    "signInSeconds": "Signez en secondes",
+    "allFormats": "Tous les formats"
+  },
+  "signature": {
+    "title": "Créez votre signature",
+    "instructions": "Dessinez votre signature dans la case ci-dessous en utilisant votre souris ou votre écran tactile. Vous pourrez utiliser cette signature pour signer des documents ultérieurement.",
+    "penColor": "Couleur du stylo",
+    "penThickness": "Épaisseur du stylo",
+    "backToUpload": "Retour au téléchargement",
+    "retry": "Réessayer",
+    "applyToDocument": "Appliquer au document"
+  },
+  "documentSign": {
+    "title": "Signez votre document",
+    "instructions": "Faites glisser la signature pour la positionner, ou utilisez les poignées dans les coins pour la redimensionner. Ensuite, cliquez sur \"Signer et télécharger\".",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {{current}} sur {{total}}",
+    "backToSignature": "Retour à la signature",
+    "uploadDifferent": "Télécharger un autre fichier",
+    "signDownload": "Signer et télécharger",
+    "success": "Document signé avec succès ! Le fichier a été téléchargé.",
+    "errors": {
+      "noSignature": "Veuillez d'abord créer votre signature avant de signer des documents.",
+      "unsupportedType": "Type de fichier non pris en charge. Veuillez télécharger un fichier PDF ou image."
+    }
+  },
+  "language": {
+    "select": "Langue"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "문서 서명",
+    "trademark": "@RACODEX 2026"
+  },
+  "fileUpload": {
+    "title": "파일 업로드",
+    "subtitle": "안전함. 빠름. 계정 불필요.",
+    "clickToUpload": "클릭하여 업로드",
+    "dragAndDrop": "또는 드래그 앤 드롭",
+    "fileTypes": "PDF, 이미지 (최대 {{size}}MB)",
+    "errors": {
+      "fileTooLarge": "파일이 너무 큽니다. 최대 크기는 {{size}}MB입니다.",
+      "unsupportedType": "업로드한 파일은 지원되지 않습니다. PDF, Word 문서 또는 이미지 파일을 업로드하십시오."
+    }
+  },
+  "benefits": {
+    "noDataStored": "데이터 저장 안 함",
+    "signInSeconds": "몇 초 만에 서명",
+    "allFormats": "모든 형식"
+  },
+  "signature": {
+    "title": "서명 만들기",
+    "instructions": "마우스나 터치스크린을 사용하여 아래 상자에 서명을 그리십시오. 나중에 문서에 서명할 때 이 서명을 사용할 수 있습니다.",
+    "penColor": "펜 색상",
+    "penThickness": "펜 두께",
+    "backToUpload": "업로드로 돌아가기",
+    "retry": "다시 시도",
+    "applyToDocument": "문서에 적용"
+  },
+  "documentSign": {
+    "title": "문서에 서명",
+    "instructions": "서명을 드래그하여 배치하거나 모서리 핸들을 사용하여 크기를 조정하십시오. 그런 다음 \"서명 및 다운로드\"를 클릭하십시오.",
+    "previous": "이전",
+    "next": "다음",
+    "page": "{{total}}페이지 중 {{current}}페이지",
+    "backToSignature": "서명으로 돌아가기",
+    "uploadDifferent": "다른 파일 업로드",
+    "signDownload": "서명 및 다운로드",
+    "success": "문서가 성공적으로 서명되었습니다! 파일이 다운로드되었습니다.",
+    "errors": {
+      "noSignature": "문서에 서명하기 전에 먼저 서명을 만드십시오.",
+      "unsupportedType": "지원되지 않는 파일 형식입니다. PDF 또는 이미지 파일을 업로드하십시오."
+    }
+  },
+  "language": {
+    "select": "언어"
+  }
+}

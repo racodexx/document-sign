@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "Document Sign",
+    "trademark": "@RACODEX 2026"
+  },
+  "fileUpload": {
+    "title": "Upload your file",
+    "subtitle": "Secure. Fast. No account needed.",
+    "clickToUpload": "Click to upload",
+    "dragAndDrop": "or drag and drop",
+    "fileTypes": "PDF, Images (max. {{size}}MB)",
+    "errors": {
+      "fileTooLarge": "File is too large. Maximum size is {{size}}MB.",
+      "unsupportedType": "The file you uploaded is not supported. Please upload a PDF, Word document, or an image file."
+    }
+  },
+  "benefits": {
+    "noDataStored": "No data stored",
+    "signInSeconds": "Sign in seconds",
+    "allFormats": "All formats"
+  },
+  "signature": {
+    "title": "Create Your Signature",
+    "instructions": "Draw your signature in the box below using your mouse or touchscreen. You can use this signature to sign documents later.",
+    "penColor": "Pen Color",
+    "penThickness": "Pen Thickness",
+    "backToUpload": "Back to file upload",
+    "retry": "Retry",
+    "applyToDocument": "Apply to document"
+  },
+  "documentSign": {
+    "title": "Sign Your Document",
+    "instructions": "Drag the signature to position it, or use the corner handles to resize it. Then click \"Sign & Download\".",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{total}}",
+    "backToSignature": "Back to signature",
+    "uploadDifferent": "Upload Different File",
+    "signDownload": "Sign & Download",
+    "success": "Document signed successfully! The file has been downloaded.",
+    "errors": {
+      "noSignature": "Please create your signature first before signing documents.",
+      "unsupportedType": "Unsupported file type. Please upload a PDF or image file."
+    }
+  },
+  "language": {
+    "select": "Language"
+  }
+}

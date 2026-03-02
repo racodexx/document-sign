@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "Semnează Document",
+    "trademark": "@RACODEX 2026"
+  },
+  "fileUpload": {
+    "title": "Încarcă fișierul tău",
+    "subtitle": "Securizat. Rapid. Fără cont necesar.",
+    "clickToUpload": "Apasă pentru a încărca",
+    "dragAndDrop": "sau trage și lasă",
+    "fileTypes": "PDF, Imagini (max. {{size}}MB)",
+    "errors": {
+      "fileTooLarge": "Fișierul este prea mare. Dimensiunea maximă este {{size}}MB.",
+      "unsupportedType": "Fișierul încărcat nu este suportat. Te rugăm să încarci un PDF, document Word sau un fișier imagine."
+    }
+  },
+  "benefits": {
+    "noDataStored": "Nicio dată stocată",
+    "signInSeconds": "Semnează în secunde",
+    "allFormats": "Toate formatele"
+  },
+  "signature": {
+    "title": "Creează-ți semnătura",
+    "instructions": "Desenează-ți semnătura în caseta de mai jos folosind mouse-ul sau ecranul tactil. Poți folosi această semnătură pentru a semna documente mai târziu.",
+    "penColor": "Culoarea stiloului",
+    "penThickness": "Grosimea stiloului",
+    "backToUpload": "Înapoi la încărcare",
+    "retry": "Reîncearcă",
+    "applyToDocument": "Aplică pe document"
+  },
+  "documentSign": {
+    "title": "Semnează documentul tău",
+    "instructions": "Trage semnătura pentru a o poziționa sau folosește mânerele din colțuri pentru a o redimensiona. Apoi apasă pe \"Semnează și descarcă\".",
+    "previous": "Anterior",
+    "next": "Următor",
+    "page": "Pagina {{current}} din {{total}}",
+    "backToSignature": "Înapoi la semnătură",
+    "uploadDifferent": "Încarcă alt fișier",
+    "signDownload": "Semnează și descarcă",
+    "success": "Document semnat cu succes! Fișierul a fost descărcat.",
+    "errors": {
+      "noSignature": "Te rugăm să creezi mai întâi semnătura înainte de a semna documente.",
+      "unsupportedType": "Tip de fișier nesuportat. Te rugăm să încarci un fișier PDF sau imagine."
+    }
+  },
+  "language": {
+    "select": "Limbă"
+  }
+}

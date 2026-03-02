@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "Dokument signieren",
+    "trademark": "@RACODEX 2026"
+  },
+  "fileUpload": {
+    "title": "Laden Sie Ihre Datei hoch",
+    "subtitle": "Sicher. Schnell. Kein Konto erforderlich.",
+    "clickToUpload": "Klicken Sie zum Hochladen",
+    "dragAndDrop": "oder per Drag & Drop",
+    "fileTypes": "PDF, Bilder (max. {{size}}MB)",
+    "errors": {
+      "fileTooLarge": "Die Datei ist zu groß. Die maximale Größe beträgt {{size}}MB.",
+      "unsupportedType": "Die hochgeladene Datei wird nicht unterstützt. Bitte laden Sie ein PDF, Word-Dokument oder eine Bilddatei hoch."
+    }
+  },
+  "benefits": {
+    "noDataStored": "Keine Daten gespeichert",
+    "signInSeconds": "In Sekunden signieren",
+    "allFormats": "Alle Formate"
+  },
+  "signature": {
+    "title": "Erstellen Sie Ihre Unterschrift",
+    "instructions": "Zeichnen Sie Ihre Unterschrift in das Feld unten mit Ihrer Maus oder Ihrem Touchscreen. Sie können diese Unterschrift später zum Signieren von Dokumenten verwenden.",
+    "penColor": "Stiftfarbe",
+    "penThickness": "Stiftdicke",
+    "backToUpload": "Zurück zum Upload",
+    "retry": "Wiederholen",
+    "applyToDocument": "Auf Dokument anwenden"
+  },
+  "documentSign": {
+    "title": "Signieren Sie Ihr Dokument",
+    "instructions": "Ziehen Sie die Unterschrift, um sie zu positionieren, oder verwenden Sie die Eckgriffe, um die Größe zu ändern. Klicken Sie dann auf \"Signieren & Herunterladen\".",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "page": "Seite {{current}} von {{total}}",
+    "backToSignature": "Zurück zur Unterschrift",
+    "uploadDifferent": "Andere Datei hochladen",
+    "signDownload": "Signieren & Herunterladen",
+    "success": "Dokument erfolgreich signiert! Die Datei wurde heruntergeladen.",
+    "errors": {
+      "noSignature": "Bitte erstellen Sie zuerst Ihre Unterschrift, bevor Sie Dokumente signieren.",
+      "unsupportedType": "Nicht unterstützter Dateityp. Bitte laden Sie eine PDF- oder Bilddatei hoch."
+    }
+  },
+  "language": {
+    "select": "Sprache"
+  }
+}

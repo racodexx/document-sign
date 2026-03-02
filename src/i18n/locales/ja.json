@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "文書署名",
+    "trademark": "@RACODEX 2026"
+  },
+  "fileUpload": {
+    "title": "ファイルをアップロード",
+    "subtitle": "安全。高速。アカウント不要。",
+    "clickToUpload": "クリックしてアップロード",
+    "dragAndDrop": "またはドラッグ＆ドロップ",
+    "fileTypes": "PDF、画像（最大{{size}}MB）",
+    "errors": {
+      "fileTooLarge": "ファイルが大きすぎます。最大サイズは{{size}}MBです。",
+      "unsupportedType": "アップロードされたファイルはサポートされていません。PDF、Word文書、または画像ファイルをアップロードしてください。"
+    }
+  },
+  "benefits": {
+    "noDataStored": "データは保存されません",
+    "signInSeconds": "数秒で署名",
+    "allFormats": "すべての形式"
+  },
+  "signature": {
+    "title": "署名を作成",
+    "instructions": "マウスまたはタッチスクリーンを使用して、下のボックスに署名を描いてください。この署名は後で文書に署名するために使用できます。",
+    "penColor": "ペンの色",
+    "penThickness": "ペンの太さ",
+    "backToUpload": "アップロードに戻る",
+    "retry": "再試行",
+    "applyToDocument": "文書に適用"
+  },
+  "documentSign": {
+    "title": "文書に署名",
+    "instructions": "署名をドラッグして配置するか、コーナーハンドルを使用してサイズを変更します。次に「署名してダウンロード」をクリックします。",
+    "previous": "前へ",
+    "next": "次へ",
+    "page": "{{current}}ページ / {{total}}ページ",
+    "backToSignature": "署名に戻る",
+    "uploadDifferent": "別のファイルをアップロード",
+    "signDownload": "署名してダウンロード",
+    "success": "文書の署名が成功しました！ファイルがダウンロードされました。",
+    "errors": {
+      "noSignature": "文書に署名する前に、まず署名を作成してください。",
+      "unsupportedType": "サポートされていないファイルタイプです。PDFまたは画像ファイルをアップロードしてください。"
+    }
+  },
+  "language": {
+    "select": "言語"
+  }
+}

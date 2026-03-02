@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "Firma Documento",
+    "trademark": "@RACODEX 2026"
+  },
+  "fileUpload": {
+    "title": "Carica il tuo file",
+    "subtitle": "Sicuro. Veloce. Nessun account necessario.",
+    "clickToUpload": "Clicca per caricare",
+    "dragAndDrop": "o trascina e rilascia",
+    "fileTypes": "PDF, Immagini (max. {{size}}MB)",
+    "errors": {
+      "fileTooLarge": "Il file è troppo grande. La dimensione massima è {{size}}MB.",
+      "unsupportedType": "Il file caricato non è supportato. Si prega di caricare un PDF, un documento Word o un file immagine."
+    }
+  },
+  "benefits": {
+    "noDataStored": "Nessun dato memorizzato",
+    "signInSeconds": "Firma in secondi",
+    "allFormats": "Tutti i formati"
+  },
+  "signature": {
+    "title": "Crea la tua firma",
+    "instructions": "Disegna la tua firma nella casella qui sotto usando il mouse o il touchscreen. Potrai utilizzare questa firma per firmare i documenti in seguito.",
+    "penColor": "Colore della penna",
+    "penThickness": "Spessore della penna",
+    "backToUpload": "Torna al caricamento",
+    "retry": "Riprova",
+    "applyToDocument": "Applica al documento"
+  },
+  "documentSign": {
+    "title": "Firma il tuo documento",
+    "instructions": "Trascina la firma per posizionarla, o usa le maniglie agli angoli per ridimensionarla. Quindi clicca su \"Firma e scarica\".",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "page": "Pagina {{current}} di {{total}}",
+    "backToSignature": "Torna alla firma",
+    "uploadDifferent": "Carica un altro file",
+    "signDownload": "Firma e scarica",
+    "success": "Documento firmato con successo! Il file è stato scaricato.",
+    "errors": {
+      "noSignature": "Si prega di creare prima la firma prima di firmare i documenti.",
+      "unsupportedType": "Tipo di file non supportato. Si prega di caricare un file PDF o immagine."
+    }
+  },
+  "language": {
+    "select": "Lingua"
+  }
+}
