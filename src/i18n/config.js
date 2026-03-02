@@ -16,12 +16,12 @@ const resources = {
   fr: { translation: fr },
   de: { translation: de },
   it: { translation: it },
+  pt: { translation: pt },
   ro: { translation: ro },
   zh: { translation: zh },
   ja: { translation: ja },
   ko: { translation: ko },
   hi: { translation: hi },
-  pt: { translation: pt },
 };
 
 // Detect browser language
