@@ -29,7 +29,7 @@ const typeStyles = {
 
 const StyledInfoBox = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
   padding: 1rem;
   border-radius: 8px;

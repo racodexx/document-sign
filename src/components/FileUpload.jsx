@@ -49,7 +49,8 @@ const FileUpload = ({ onFileSelect }) => {
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
 
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  const Max_FILE_SIZE_MB = 15;
+  const MAX_FILE_SIZE = Max_FILE_SIZE_MB * 1024 * 1024;
   const ALLOWED_TYPES = [
     "application/pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -62,7 +63,7 @@ const FileUpload = ({ onFileSelect }) => {
     if (!file) return false;
 
     if (file.size > MAX_FILE_SIZE) {
-      setError("File is too large. Maximum size is 10MB.");
+      setError(`File is too large. Maximum size is ${Max_FILE_SIZE_MB}MB.`);
       return false;
     }
 
@@ -130,13 +131,13 @@ const FileUpload = ({ onFileSelect }) => {
           <strong>Click to upload</strong> or drag and drop
         </UploadText>
         <UploadText style={{ fontSize: "0.875rem" }}>
-          PDF, DOC, DOCX (max. 10MB)
+          {`PDF, Images (max. ${Max_FILE_SIZE_MB}MB)`}
         </UploadText>
         <HiddenInput
           ref={fileInputRef}
           type="file"
           onChange={handleFileChange}
-          accept=".pdf,.docx,.png,.jpg,.jpeg"
+          accept=".pdf,.png,.jpg,.jpeg"
         />
       </DropZone>
       {error && <InfoBox type="error">{error}</InfoBox>}
