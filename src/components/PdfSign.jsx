@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
 import { PDFDocument } from "pdf-lib";
 import { Button, InfoBox, Container } from "./base/index";
+import useIsMobile from "../hooks/useIsMobile";
 
 // Set up PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -16,6 +17,12 @@ const ViewerContainer = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 640px) {
+    padding: 1rem 0.5rem;
+  }
 `;
 
 const PageWrapper = styled.div`
@@ -32,6 +39,7 @@ const SignatureWrapper = styled.div`
   position: absolute;
   pointer-events: auto;
   z-index: 10;
+  touch-action: none;
   ${(props) => (props.$isDragging ? "opacity: 0.7;" : "")}
 `;
 
@@ -81,20 +89,45 @@ const ResizeHandle = styled.div`
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   justify-content: space-between;
+  flex-wrap: wrap;
+
+  @media (max-width: 640px) {
+    justify-content: center;
+  }
 `;
 
 const Controls = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const PageInfo = styled.span`
   color: #64748b;
   font-size: 0.875rem;
 `;
+
+const ZoomBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+`;
+
+const ZoomLabel = styled.span`
+  font-size: 0.875rem;
+  color: #64748b;
+  min-width: 3.5rem;
+  text-align: center;
+`;
+
+const ZOOM_STEP = 0.25;
+const MIN_ZOOM = 0.5;
+const MAX_ZOOM = 3;
 
 const PdfSign = ({ file, signature, onReset, onBack }) => {
   const { t } = useTranslation();
@@ -122,7 +155,11 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
   });
   const [pdfUrl, setPdfUrl] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [pageWidth, setPageWidth] = useState(null);
   const pageRef = useRef(null);
+  const viewerRef = useRef(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (file) {
@@ -131,6 +168,25 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
       return () => URL.revokeObjectURL(url);
     }
   }, [file]);
+
+  // Measure viewer container to compute fit-to-width page size
+  useEffect(() => {
+    if (!viewerRef.current) return;
+    const measure = () => {
+      const el = viewerRef.current;
+      const style = window.getComputedStyle(el);
+      const paddingH = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+      setPageWidth(Math.max(200, el.clientWidth - paddingH));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(viewerRef.current);
+    return () => ro.disconnect();
+  }, []);
+
+  const zoomIn = () => setZoom((z) => Math.min(MAX_ZOOM, parseFloat((z + ZOOM_STEP).toFixed(2))));
+  const zoomOut = () => setZoom((z) => Math.max(MIN_ZOOM, parseFloat((z - ZOOM_STEP).toFixed(2))));
+  const resetZoom = () => setZoom(1);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -146,6 +202,17 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
     });
   };
 
+  const handleSignatureTouchStart = (e) => {
+    e.stopPropagation();
+    const touch = e.touches[0];
+    setIsDragging(true);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDragOffset({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    });
+  };
+
   const handleResizeMouseDown = (e, handle) => {
     e.stopPropagation();
     setIsResizing(true);
@@ -153,6 +220,21 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
     setResizeStart({
       x: e.clientX,
       y: e.clientY,
+      width: signatureSize.width,
+      height: signatureSize.height,
+      posX: signaturePosition.x,
+      posY: signaturePosition.y,
+    });
+  };
+
+  const handleResizeTouchStart = (e, handle) => {
+    e.stopPropagation();
+    const touch = e.touches[0];
+    setIsResizing(true);
+    setResizeHandle(handle);
+    setResizeStart({
+      x: touch.clientX,
+      y: touch.clientY,
       width: signatureSize.width,
       height: signatureSize.height,
       posX: signaturePosition.x,
@@ -237,6 +319,17 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
     setResizeHandle(null);
   };
 
+  const handleTouchMove = (e) => {
+    if (!isDragging && !isResizing) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    handleMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
+  };
+
+  const handleTouchEnd = () => {
+    handleMouseUp();
+  };
+
   const handlePreviousPage = () => {
     setCurrentPage((prev) => Math.max(1, prev - 1));
   };
@@ -263,21 +356,26 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
       const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
 
       // Get page dimensions
-      const { width, height } = page.getSize();
+      const { width: pdfW, height: pdfH } = page.getSize();
 
-      // Calculate signature dimensions and position
-      // PDF coordinates start from bottom-left, so we need to convert
-      const signatureWidth = signatureSize.width;
-      const signatureHeight = signatureSize.height;
-      const x = signaturePosition.x;
-      const y = height - signaturePosition.y - signatureHeight;
+      // Scale screen-pixel coords back to PDF point space
+      const renderedW = pageRef.current ? pageRef.current.offsetWidth : pdfW;
+      const renderedH = pageRef.current ? pageRef.current.offsetHeight : pdfH;
+      const scaleX = pdfW / renderedW;
+      const scaleY = pdfH / renderedH;
+
+      const sigX = signaturePosition.x * scaleX;
+      const sigW = signatureSize.width * scaleX;
+      const sigH = signatureSize.height * scaleY;
+      // PDF Y-axis is bottom-up
+      const sigY = pdfH - signaturePosition.y * scaleY - sigH;
 
       // Draw the signature on the PDF
       page.drawImage(signatureImage, {
-        x: x,
-        y: y,
-        width: signatureWidth,
-        height: signatureHeight,
+        x: sigX,
+        y: sigY,
+        width: sigW,
+        height: sigH,
       });
 
       // Save the PDF
@@ -314,15 +412,18 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
       </InfoBox>
 
       <ViewerContainer
+        ref={viewerRef}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
-        {pdfUrl && (
+        {pdfUrl && pageWidth && (
           <PageWrapper ref={pageRef}>
             <PdfPageWrapper>
               <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-                <Page pageNumber={currentPage} />
+                <Page pageNumber={currentPage} width={pageWidth * zoom} />
               </Document>
             </PdfPageWrapper>
 
@@ -340,23 +441,28 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
                   src={signature.dataUrl}
                   alt="Signature"
                   onMouseDown={handleSignatureMouseDown}
+                  onTouchStart={handleSignatureTouchStart}
                   draggable={false}
                 />
                 <ResizeHandle
                   className="top-left"
                   onMouseDown={(e) => handleResizeMouseDown(e, "top-left")}
+                  onTouchStart={(e) => handleResizeTouchStart(e, "top-left")}
                 />
                 <ResizeHandle
                   className="top-right"
                   onMouseDown={(e) => handleResizeMouseDown(e, "top-right")}
+                  onTouchStart={(e) => handleResizeTouchStart(e, "top-right")}
                 />
                 <ResizeHandle
                   className="bottom-left"
                   onMouseDown={(e) => handleResizeMouseDown(e, "bottom-left")}
+                  onTouchStart={(e) => handleResizeTouchStart(e, "bottom-left")}
                 />
                 <ResizeHandle
                   className="bottom-right"
                   onMouseDown={(e) => handleResizeMouseDown(e, "bottom-right")}
+                  onTouchStart={(e) => handleResizeTouchStart(e, "bottom-right")}
                 />
               </SignatureWrapper>
             )}
@@ -384,6 +490,15 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
             {t('documentSign.next')}
           </Button>
         </Controls>
+
+        {isMobile && (
+        <ZoomBar>
+          <Button variant="secondary" onClick={zoomOut} disabled={zoom <= MIN_ZOOM}>−</Button>
+          <ZoomLabel>{Math.round(zoom * 100)}%</ZoomLabel>
+          <Button variant="secondary" onClick={zoomIn} disabled={zoom >= MAX_ZOOM}>+</Button>
+          <Button variant="secondary" onClick={resetZoom}>↺</Button>
+        </ZoomBar>
+        )}
 
         <Controls>
           <Button variant="secondary" onClick={onBack}>

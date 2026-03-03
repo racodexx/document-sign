@@ -17,7 +17,7 @@
   "benefits": {
     "noDataStored": "データは保存されません",
     "signInSeconds": "数秒で署名",
-    "allFormats": "すべての形式"
+    "allFormats": ".pdf, .png, .jpg, .jpeg"
   },
   "signature": {
     "title": "署名を作成",
@@ -45,5 +45,12 @@
   },
   "language": {
     "select": "言語"
+  },
+  "install": {
+    "title": "ホーム画面に追加",
+    "message": "このアプリをインストールしてホーム画面から素早くアクセス。",
+    "iosInstructions": "共有ボタンをタップしてホーム画面に追加を選択。",
+    "install": "インストール",
+    "dismiss": "後で"
   }
 }

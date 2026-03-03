@@ -17,7 +17,7 @@
   "benefits": {
     "noDataStored": "No data stored",
     "signInSeconds": "Sign in seconds",
-    "allFormats": "All formats"
+    "allFormats": ".pdf, .png, .jpg, .jpeg"
   },
   "signature": {
     "title": "Create Your Signature",
@@ -45,5 +45,12 @@
   },
   "language": {
     "select": "Language"
+  },
+  "install": {
+    "title": "Add to Home Screen",
+    "message": "Install this app for quick access from your home screen.",
+    "iosInstructions": "Tap the Share button then Add to Home Screen to install.",
+    "install": "Install",
+    "dismiss": "Not now"
   }
 }

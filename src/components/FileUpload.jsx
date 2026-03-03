@@ -5,7 +5,7 @@ import { InfoBox, Title, Container, Subtitle } from "./base/index";
 import { AppBenefits } from "./index";
 
 const StyledContainter = styled(Container)`
-  height: 70vh;
+  min-height: 70vh;
   justify-content: center;
 `;
 
@@ -27,12 +27,22 @@ const DropZone = styled.div`
     border-color: #4f46e5;
     background-color: #eef2ff;
   }
+
+  @media (max-width: 480px) {
+    padding: 1.5rem 1rem;
+    min-height: 160px;
+  }
 `;
 
 const UploadText = styled.h2`
   color: #64748b;
   margin: 0.5rem 0;
   text-align: center;
+  font-size: 1rem;
+
+  @media (max-width: 480px) {
+    font-size: 0.875rem;
+  }
 `;
 
 const UploadIcon = styled.div`

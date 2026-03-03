@@ -17,7 +17,7 @@
   "benefits": {
     "noDataStored": "Nenhum dado armazenado",
     "signInSeconds": "Assine em segundos",
-    "allFormats": "Todos os formatos"
+    "allFormats": ".pdf, .png, .jpg, .jpeg"
   },
   "signature": {
     "title": "Crie sua assinatura",
@@ -45,5 +45,12 @@
   },
   "language": {
     "select": "Idioma"
+  },
+  "install": {
+    "title": "Adicionar à tela inicial",
+    "message": "Instale este aplicativo para acesso rápido pela tela inicial.",
+    "iosInstructions": "Toque em Compartilhar e depois em Adicionar à Tela Inicial.",
+    "install": "Instalar",
+    "dismiss": "Agora não"
   }
 }

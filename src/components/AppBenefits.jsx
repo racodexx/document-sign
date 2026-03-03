@@ -2,9 +2,11 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
 const Description = styled.div`
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 24px;
   padding: 14px 28px;
 
   background: linear-gradient(145deg, #f7f9fc, #eef3f9);
@@ -13,6 +15,13 @@ const Description = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #2d3748;
+
+  @media (max-width: 480px) {
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 12px;
+    gap: 8px 16px;
+  }
 `;
 
 const Icon = styled.span`
