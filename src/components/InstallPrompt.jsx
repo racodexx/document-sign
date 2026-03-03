@@ -113,6 +113,19 @@ const InstallPrompt = () => {
   }, [isMobile]);
 
   const handleInstall = async () => {
+    if (ios) {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: document.title,
+            url: window.location.href,
+          });
+        } catch (_) {
+          // user cancelled or share failed — keep banner visible
+        }
+      }
+      return;
+    }
     if (!promptEvent) return;
     promptEvent.prompt();
     const { outcome } = await promptEvent.userChoice;
@@ -137,9 +150,7 @@ const InstallPrompt = () => {
           {ios ? t("install.iosInstructions") : t("install.message")}
         </BannerText>
         <ButtonRow>
-          {!ios && (
-            <InstallBtn onClick={handleInstall}>{t("install.install")}</InstallBtn>
-          )}
+          <InstallBtn onClick={handleInstall}>{t("install.install")}</InstallBtn>
           <DismissBtn onClick={dismiss}>{t("install.dismiss")}</DismissBtn>
         </ButtonRow>
       </Body>
