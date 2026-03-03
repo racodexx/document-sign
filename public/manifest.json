@@ -1,0 +1,17 @@
+{
+  "name": "Document Sign",
+  "short_name": "Document Sign",
+  "description": "Sign documents and images securely, no account needed.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "/icon.jpg",
+      "sizes": "any",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -17,7 +17,7 @@
   "benefits": {
     "noDataStored": "Nessun dato memorizzato",
     "signInSeconds": "Firma in secondi",
-    "allFormats": "Tutti i formati"
+    "allFormats": ".pdf, .png, .jpg, .jpeg"
   },
   "signature": {
     "title": "Crea la tua firma",
@@ -45,5 +45,12 @@
   },
   "language": {
     "select": "Lingua"
+  },
+  "install": {
+    "title": "Aggiungi alla schermata Home",
+    "message": "Installa questa app per accedervi rapidamente dalla schermata Home.",
+    "iosInstructions": "Tocca Condividi poi Aggiungi alla schermata Home.",
+    "install": "Installa",
+    "dismiss": "Non ora"
   }
 }

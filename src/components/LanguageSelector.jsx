@@ -2,14 +2,11 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 const LanguageSwitcher = styled.div`
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
+  align-self: flex-end;
 `;
 
 const Select = styled.select`
-  padding: 8px 12px;
+  padding: 6px 10px;
   border: 2px solid #cbd5e1;
   border-radius: 8px;
   background-color: #ffffff;
@@ -19,6 +16,7 @@ const Select = styled.select`
   cursor: pointer;
   outline: none;
   transition: all 0.2s ease;
+  max-width: 150px;
 
   &:hover {
     border-color: #3b82f6;
@@ -27,6 +25,12 @@ const Select = styled.select`
   &:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  @media (max-width: 480px) {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    max-width: 120px;
   }
 `;
 

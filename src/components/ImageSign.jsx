@@ -12,6 +12,12 @@ const ViewerContainer = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 640px) {
+    padding: 1rem 0.5rem;
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -30,6 +36,7 @@ const SignatureWrapper = styled.div`
   position: absolute;
   pointer-events: auto;
   z-index: 10;
+  touch-action: none;
   ${(props) => (props.$isDragging ? "opacity: 0.7;" : "")}
 `;
 
@@ -79,8 +86,13 @@ const ResizeHandle = styled.div`
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   justify-content: flex-end;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    justify-content: center;
+  }
 `;
 
 const ImageSign = ({ file, signature, onReset, onBack }) => {
@@ -108,6 +120,24 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
   });
   const imageRef = useRef(null);
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
+  const touchMoveRef = useRef(null);
+  const touchEndRef = useRef(null);
+
+  // Must attach touchmove with passive:false so preventDefault() works on iOS.
+  // Stable wrappers call the latest handler via a ref so the effect only mounts once.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onTouchMove = (e) => touchMoveRef.current?.(e);
+    const onTouchEnd = (e) => touchEndRef.current?.(e);
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd);
+    return () => {
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
+  }, []);
 
   useEffect(() => {
     if (file) {
@@ -127,6 +157,17 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
     });
   };
 
+  const handleSignatureTouchStart = (e) => {
+    e.stopPropagation();
+    const touch = e.touches[0];
+    setIsDragging(true);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDragOffset({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    });
+  };
+
   const handleResizeMouseDown = (e, handle) => {
     e.stopPropagation();
     setIsResizing(true);
@@ -134,6 +175,21 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
     setResizeStart({
       x: e.clientX,
       y: e.clientY,
+      width: signatureSize.width,
+      height: signatureSize.height,
+      posX: signaturePosition.x,
+      posY: signaturePosition.y,
+    });
+  };
+
+  const handleResizeTouchStart = (e, handle) => {
+    e.stopPropagation();
+    const touch = e.touches[0];
+    setIsResizing(true);
+    setResizeHandle(handle);
+    setResizeStart({
+      x: touch.clientX,
+      y: touch.clientY,
       width: signatureSize.width,
       height: signatureSize.height,
       posX: signaturePosition.x,
@@ -218,6 +274,19 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
     setResizeHandle(null);
   };
 
+  const handleTouchMove = (e) => {
+    if (!isDragging && !isResizing) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    handleMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
+  };
+  touchMoveRef.current = handleTouchMove;
+
+  const handleTouchEnd = () => {
+    handleMouseUp();
+  };
+  touchEndRef.current = handleTouchEnd;
+
   const handleSaveSignedImage = () => {
     if (!signature || !imageRef.current) return;
 
@@ -281,6 +350,7 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
       </InfoBox>
 
       <ViewerContainer
+        ref={containerRef}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
@@ -309,25 +379,30 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
                     src={signature.dataUrl}
                     alt="Signature"
                     onMouseDown={handleSignatureMouseDown}
+                    onTouchStart={handleSignatureTouchStart}
                     draggable={false}
                   />
                   <ResizeHandle
                     className="top-left"
                     onMouseDown={(e) => handleResizeMouseDown(e, "top-left")}
+                    onTouchStart={(e) => handleResizeTouchStart(e, "top-left")}
                   />
                   <ResizeHandle
                     className="top-right"
                     onMouseDown={(e) => handleResizeMouseDown(e, "top-right")}
+                    onTouchStart={(e) => handleResizeTouchStart(e, "top-right")}
                   />
                   <ResizeHandle
                     className="bottom-left"
                     onMouseDown={(e) => handleResizeMouseDown(e, "bottom-left")}
+                    onTouchStart={(e) => handleResizeTouchStart(e, "bottom-left")}
                   />
                   <ResizeHandle
                     className="bottom-right"
                     onMouseDown={(e) =>
                       handleResizeMouseDown(e, "bottom-right")
                     }
+                    onTouchStart={(e) => handleResizeTouchStart(e, "bottom-right")}
                   />
                 </SignatureWrapper>
               )}

@@ -17,7 +17,7 @@
   "benefits": {
     "noDataStored": "Keine Daten gespeichert",
     "signInSeconds": "In Sekunden signieren",
-    "allFormats": "Alle Formate"
+    "allFormats": ".pdf, .png, .jpg, .jpeg"
   },
   "signature": {
     "title": "Erstellen Sie Ihre Unterschrift",
@@ -45,5 +45,12 @@
   },
   "language": {
     "select": "Sprache"
+  },
+  "install": {
+    "title": "Zum Startbildschirm hinzufügen",
+    "message": "Installieren Sie diese App für schnellen Zugriff vom Startbildschirm.",
+    "iosInstructions": "Tippen Sie auf Teilen dann auf Zum Home-Bildschirm.",
+    "install": "Installieren",
+    "dismiss": "Nicht jetzt"
   }
 }

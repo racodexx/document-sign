@@ -17,7 +17,7 @@
   "benefits": {
     "noDataStored": "不存储数据",
     "signInSeconds": "几秒钟内签名",
-    "allFormats": "所有格式"
+    "allFormats": ".pdf, .png, .jpg, .jpeg"
   },
   "signature": {
     "title": "创建您的签名",
@@ -45,5 +45,12 @@
   },
   "language": {
     "select": "语言"
+  },
+  "install": {
+    "title": "添加到主屏幕",
+    "message": "安装此应用以便从主屏幕快速访问。",
+    "iosInstructions": "点击分享按钮然后选择添加到主屏幕。",
+    "install": "安装",
+    "dismiss": "暂不"
   }
 }

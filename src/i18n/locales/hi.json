@@ -17,7 +17,7 @@
   "benefits": {
     "noDataStored": "कोई डेटा संग्रहीत नहीं",
     "signInSeconds": "सेकंड में हस्ताक्षर करें",
-    "allFormats": "सभी प्रारूप"
+    "allFormats": ".pdf, .png, .jpg, .jpeg"
   },
   "signature": {
     "title": "अपना हस्ताक्षर बनाएं",
@@ -45,5 +45,12 @@
   },
   "language": {
     "select": "भाषा"
+  },
+  "install": {
+    "title": "होम स्क्रीन पर जोड़ें",
+    "message": "होम स्क्रीन से त्वरित पहुँच के लिए इस ऐप को इंस्टॉल करें।",
+    "iosInstructions": "शेयर बटन दबाएं और फिर होम स्क्रीन पर जोड़ें चुनें।",
+    "install": "इंस्टॉल करें",
+    "dismiss": "अभी नहीं"
   }
 }

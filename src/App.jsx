@@ -1,15 +1,23 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { SignatureRegister, DocumentSign, FileUpload, LanguageSelector } from "./components";
+import {
+  SignatureRegister,
+  DocumentSign,
+  FileUpload,
+  LanguageSelector,
+} from "./components";
 import TradeMark from "./components/TradeMark";
+import InstallPrompt from "./components/InstallPrompt";
 import "./i18n/config";
 
 const StyledApp = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px 10px;
+  padding: 16px 16px 40px;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
 `;
 
 const SignSteps = {
@@ -83,7 +91,12 @@ const App = () => {
   return (
     <StyledApp id="main-view">
       <LanguageSelector />
-      <TradeMark />
+      {step === SignSteps.UPLOAD_FILE && (
+        <>
+          <TradeMark />
+          <InstallPrompt />
+        </>
+      )}
       {render()}
     </StyledApp>
   );

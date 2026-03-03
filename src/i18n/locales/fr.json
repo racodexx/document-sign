@@ -17,7 +17,7 @@
   "benefits": {
     "noDataStored": "Aucune donnée stockée",
     "signInSeconds": "Signez en secondes",
-    "allFormats": "Tous les formats"
+    "allFormats": ".pdf, .png, .jpg, .jpeg"
   },
   "signature": {
     "title": "Créez votre signature",
@@ -45,5 +45,12 @@
   },
   "language": {
     "select": "Langue"
+  },
+  "install": {
+    "title": "Ajouter à l'écran d'accueil",
+    "message": "Installez cette application pour un accès rapide depuis votre écran d'accueil.",
+    "iosInstructions": "Appuyez sur Partager puis Sur l'écran d'accueil.",
+    "install": "Installer",
+    "dismiss": "Pas maintenant"
   }
 }

@@ -17,7 +17,7 @@
   "benefits": {
     "noDataStored": "Nicio dată stocată",
     "signInSeconds": "Semnează în secunde",
-    "allFormats": "Toate formatele"
+    "allFormats": ".pdf, .png, .jpg, .jpeg"
   },
   "signature": {
     "title": "Creează-ți semnătura",
@@ -45,5 +45,12 @@
   },
   "language": {
     "select": "Limbă"
+  },
+  "install": {
+    "title": "Adaugă pe ecranul principal",
+    "message": "Instalează aplicația pentru acces rapid de pe ecranul principal.",
+    "iosInstructions": "Apasă Distribuie apoi Adaugă pe ecranul principal.",
+    "install": "Instalează",
+    "dismiss": "Nu acum"
   }
 }

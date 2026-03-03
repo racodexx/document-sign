@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import SignaturePad from "signature_pad";
 import { Button, InfoBox, Container, Title } from "./base/index";
+import useIsMobile from "../hooks/useIsMobile";
 
 const CanvasContainer = styled.div`
   border: 2px solid #cbd5e1;
@@ -20,8 +21,13 @@ const Canvas = styled.canvas`
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   justify-content: flex-end;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    justify-content: center;
+  }
 `;
 
 const ControlsContainer = styled.div`
@@ -91,6 +97,10 @@ const Slider = styled.input`
     cursor: pointer;
     border: none;
   }
+
+  @media (max-width: 480px) {
+    width: 110px;
+  }
 `;
 
 const SliderValue = styled.span`
@@ -102,45 +112,93 @@ const SliderValue = styled.span`
 const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
   const { t } = useTranslation();
   const canvasRef = useRef(null);
+  const canvasContainerRef = useRef(null);
   const signaturePadRef = useRef(null);
+  const hasContentRef = useRef(false);
   const [isEmpty, setIsEmpty] = useState(true);
-  const [penColor, setPenColor] = useState("#1e40af");
-  const [penWidth, setPenWidth] = useState(5);
+
+  const isMobile = useIsMobile();
+  const PEN_MIN = isMobile ? 2 : 3;
+  const PEN_MAX = isMobile ? 6 : 10;
+  const PEN_DEFAULT = isMobile ? 3 : 5;
+
+  const [penColor, setPenColor] = useState(
+    () => localStorage.getItem('sig_penColor') || '#1e40af'
+  );
+  const [penWidth, setPenWidth] = useState(() => {
+    const saved = parseFloat(localStorage.getItem('sig_penWidth'));
+    if (!isNaN(saved)) return Math.min(PEN_MAX, Math.max(PEN_MIN, saved));
+    return PEN_DEFAULT;
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = canvasContainerRef.current;
+    if (!canvas || !container) return;
 
-    // Set canvas size
-    canvas.width = 800;
-    canvas.height = 300;
+    const setSize = (w) => {
+      canvas.width = w;
+      canvas.height = Math.max(150, Math.min(300, Math.round(w * 0.375)));
+    };
 
-    // Initialize SignaturePad
-    signaturePadRef.current = new SignaturePad(canvas, {
-      penColor: penColor,
-      minWidth: penWidth * 0.5,
-      maxWidth: penWidth * 1.5,
-      velocityFilterWeight: 0.7,
-    });
+    const createPad = () => {
+      if (signaturePadRef.current) {
+        signaturePadRef.current.off();
+      }
+      signaturePadRef.current = new SignaturePad(canvas, {
+        penColor: penColor,
+        minWidth: penWidth * 0.5,
+        maxWidth: penWidth * 1.5,
+        velocityFilterWeight: 0.7,
+      });
+      signaturePadRef.current.addEventListener("beginStroke", () => {
+        setIsEmpty(false);
+        hasContentRef.current = true;
+      });
+    };
 
-    // Listen for drawing events
-    signaturePadRef.current.addEventListener("beginStroke", () => {
+    const drawScaled = (src) => {
+      const img = new Image();
+      img.onload = () => {
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+      img.src = src;
+    };
+
+    // Initial setup
+    setSize(container.offsetWidth);
+    createPad();
+
+    // Load existing signature if provided
+    if (signature) {
+      const src = signature.dataUrl || signature;
+      drawScaled(src);
+      hasContentRef.current = true;
       setIsEmpty(false);
+    }
+
+    // ResizeObserver — skip the first call (initial report, dimensions haven't changed)
+    let firstCall = true;
+    const resizeObserver = new ResizeObserver(() => {
+      if (firstCall) {
+        firstCall = false;
+        return;
+      }
+      const dataUrl = hasContentRef.current ? canvas.toDataURL() : null;
+      setSize(container.offsetWidth);
+      createPad();
+      if (dataUrl) {
+        drawScaled(dataUrl);
+      }
     });
+    resizeObserver.observe(container);
 
     return () => {
       if (signaturePadRef.current) {
         signaturePadRef.current.off();
       }
+      resizeObserver.disconnect();
     };
-  }, []);
-
-  // Load existing signature if provided
-  useEffect(() => {
-    if (signature && signaturePadRef.current) {
-      signaturePadRef.current.fromDataURL(signature.dataUrl || signature);
-      setIsEmpty(false);
-    }
   }, []);
 
   // Update pen color when changed
@@ -160,32 +218,31 @@ const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
 
   const handleColorChange = (color) => {
     setPenColor(color);
+    localStorage.setItem('sig_penColor', color);
   };
 
   const handleWidthChange = (e) => {
-    setPenWidth(parseFloat(e.target.value));
+    const val = parseFloat(e.target.value);
+    setPenWidth(val);
+    localStorage.setItem('sig_penWidth', val);
   };
 
   const clearSignature = () => {
     if (signaturePadRef.current) {
       signaturePadRef.current.clear();
+      hasContentRef.current = false;
       setIsEmpty(true);
     }
   };
 
   const saveSignature = () => {
-    if (
-      isEmpty ||
-      !signaturePadRef.current ||
-      signaturePadRef.current.isEmpty()
-    )
-      return;
+    if (isEmpty || !canvasRef.current) return;
 
-    // Export as PNG with transparent background
-    const signatureDataUrl = signaturePadRef.current.toDataURL("image/png");
+    const canvas = canvasRef.current;
+    // Export directly from canvas so pre-loaded signatures are included
+    const signatureDataUrl = canvas.toDataURL("image/png");
 
-    // Also create a blob for file operations if needed
-    signaturePadRef.current.canvas.toBlob((blob) => {
+    canvas.toBlob((blob) => {
       if (onSignatureSave) {
         onSignatureSave({
           dataUrl: signatureDataUrl,
@@ -218,8 +275,8 @@ const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
           <ColorPresets>
             <Slider
               type="range"
-              min="3"
-              max="10"
+              min={PEN_MIN}
+              max={PEN_MAX}
               step="0.5"
               value={penWidth}
               onChange={handleWidthChange}
@@ -229,7 +286,7 @@ const SignatureRegister = ({signature, onSignatureSave, onBack }) => {
         </ControlGroup>
       </ControlsContainer>
 
-      <CanvasContainer>
+      <CanvasContainer ref={canvasContainerRef}>
         <Canvas ref={canvasRef} />
       </CanvasContainer>
 
