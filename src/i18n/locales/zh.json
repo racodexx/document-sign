@@ -49,7 +49,9 @@
   "install": {
     "title": "添加到主屏幕",
     "message": "安装此应用以便从主屏幕快速访问。",
-    "iosInstructions": "点击分享按钮然后选择添加到主屏幕。",
+    "iosStep1": "在 Safari 中点击分享按钮（⬆）",
+    "iosStep2": "向下滚动并点击「添加到主屏幕」",
+    "iosStep3": "点击右上角「添加」确认",
     "install": "安装",
     "dismiss": "暂不"
   }

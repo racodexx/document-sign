@@ -49,7 +49,9 @@
   "install": {
     "title": "Add to Home Screen",
     "message": "Install this app for quick access from your home screen.",
-    "iosInstructions": "Tap the Share button then Add to Home Screen to install.",
+    "iosStep1": "Tap the Share button (\u2b06) in Safari",
+    "iosStep2": "Scroll down and tap \"Add to Home Screen\"",
+    "iosStep3": "Tap \"Add\" in the top-right corner to confirm",
     "install": "Install",
     "dismiss": "Not now"
   }

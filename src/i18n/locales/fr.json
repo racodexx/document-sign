@@ -49,7 +49,9 @@
   "install": {
     "title": "Ajouter à l'écran d'accueil",
     "message": "Installez cette application pour un accès rapide depuis votre écran d'accueil.",
-    "iosInstructions": "Appuyez sur Partager puis Sur l'écran d'accueil.",
+    "iosStep1": "Appuyez sur le bouton Partager (⬆) dans Safari",
+    "iosStep2": "Faites défiler et appuyez sur \"Sur l'écran d'accueil\"",
+    "iosStep3": "Appuyez sur \"Ajouter\" en haut à droite pour confirmer",
     "install": "Installer",
     "dismiss": "Pas maintenant"
   }

@@ -49,19 +49,6 @@ const ButtonRow = styled.div`
   flex-wrap: wrap;
 `;
 
-const InstallBtn = styled.button`
-  padding: 0.375rem 0.875rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  background-color: #4f46e5;
-  color: #ffffff;
-  transition: background-color 0.2s;
-  &:hover { background-color: #4338ca; }
-`;
-
 const DismissBtn = styled.button`
   padding: 0.375rem 0.875rem;
   border-radius: 6px;
@@ -75,6 +62,15 @@ const DismissBtn = styled.button`
   &:hover { background-color: #e0e7ff; }
 `;
 
+const IosSteps = styled.ol`
+  margin: 0.4rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.78rem;
+  color: #3730a3;
+  line-height: 1.7;
+  li { margin-bottom: 0.1rem; }
+`;
+
 const STORAGE_KEY = "install_prompt_dismissed";
 
 const isIos = () =>
@@ -86,53 +82,15 @@ const isStandalone = () =>
 const InstallPrompt = () => {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
-  const [promptEvent, setPromptEvent] = useState(null);
   const [show, setShow] = useState(false);
-  const [ios, setIos] = useState(false);
 
   useEffect(() => {
     if (!isMobile) return;
     if (isStandalone()) return;
     if (localStorage.getItem(STORAGE_KEY)) return;
-
-    const iosDevice = isIos();
-    setIos(iosDevice);
-
-    if (iosDevice) {
-      setShow(true);
-      return;
-    }
-
-    const handler = (e) => {
-      e.preventDefault();
-      setPromptEvent(e);
-      setShow(true);
-    };
-    window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    // Only show the custom banner on iOS — Android gets the browser's native prompt
+    if (isIos()) setShow(true);
   }, [isMobile]);
-
-  const handleInstall = async () => {
-    if (ios) {
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: document.title,
-            url: window.location.href,
-          });
-        } catch (_) {
-          // user cancelled or share failed — keep banner visible
-        }
-      }
-      return;
-    }
-    if (!promptEvent) return;
-    promptEvent.prompt();
-    const { outcome } = await promptEvent.userChoice;
-    if (outcome === "accepted") {
-      dismiss();
-    }
-  };
 
   const dismiss = () => {
     localStorage.setItem(STORAGE_KEY, "1");
@@ -146,11 +104,13 @@ const InstallPrompt = () => {
       <Icon>📲</Icon>
       <Body>
         <BannerTitle>{t("install.title")}</BannerTitle>
-        <BannerText>
-          {ios ? t("install.iosInstructions") : t("install.message")}
-        </BannerText>
+        <BannerText>{t("install.message")}</BannerText>
+        <IosSteps>
+          <li>{t("install.iosStep1")}</li>
+          <li>{t("install.iosStep2")}</li>
+          <li>{t("install.iosStep3")}</li>
+        </IosSteps>
         <ButtonRow>
-          <InstallBtn onClick={handleInstall}>{t("install.install")}</InstallBtn>
           <DismissBtn onClick={dismiss}>{t("install.dismiss")}</DismissBtn>
         </ButtonRow>
       </Body>
