@@ -33,7 +33,7 @@ const Icon = styled.span`
   color: #3b82f6;
   flex-shrink: 0;
 
-  .svg {
+  svg {
     width: 18px;
     height: 18px;
   }

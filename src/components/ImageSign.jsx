@@ -120,6 +120,24 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
   });
   const imageRef = useRef(null);
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
+  const touchMoveRef = useRef(null);
+  const touchEndRef = useRef(null);
+
+  // Must attach touchmove with passive:false so preventDefault() works on iOS.
+  // Stable wrappers call the latest handler via a ref so the effect only mounts once.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onTouchMove = (e) => touchMoveRef.current?.(e);
+    const onTouchEnd = (e) => touchEndRef.current?.(e);
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd);
+    return () => {
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
+  }, []);
 
   useEffect(() => {
     if (file) {
@@ -262,10 +280,12 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
     const touch = e.touches[0];
     handleMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
   };
+  touchMoveRef.current = handleTouchMove;
 
   const handleTouchEnd = () => {
     handleMouseUp();
   };
+  touchEndRef.current = handleTouchEnd;
 
   const handleSaveSignedImage = () => {
     if (!signature || !imageRef.current) return;
@@ -330,11 +350,10 @@ const ImageSign = ({ file, signature, onReset, onBack }) => {
       </InfoBox>
 
       <ViewerContainer
+        ref={containerRef}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
         <ImageWrapper>
           {imageUrl && (

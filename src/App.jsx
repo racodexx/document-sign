@@ -91,8 +91,12 @@ const App = () => {
   return (
     <StyledApp id="main-view">
       <LanguageSelector />
-      <InstallPrompt />
-      {step === SignSteps.UPLOAD_FILE && <TradeMark />}
+      {step === SignSteps.UPLOAD_FILE && (
+        <>
+          <TradeMark />
+          <InstallPrompt />
+        </>
+      )}
       {render()}
     </StyledApp>
   );
