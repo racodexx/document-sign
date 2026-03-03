@@ -14,6 +14,7 @@ const Banner = styled.div`
   border: 1px solid #c7d2fe;
   border-radius: 12px;
   margin-bottom: 0.5rem;
+  margin-top: 0.75rem;
 `;
 
 const Icon = styled.div`
