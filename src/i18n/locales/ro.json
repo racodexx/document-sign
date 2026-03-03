@@ -49,9 +49,7 @@
   "install": {
     "title": "Adaugă pe ecranul principal",
     "message": "Instalează aplicația pentru acces rapid de pe ecranul principal.",
-    "iosStep1": "Apasă butonul Distribuie (⬆) în Safari",
-    "iosStep2": "Derulează în jos și apasă \"Adaugă pe ecranul principal\"",
-    "iosStep3": "Apasă \"Adaugă\" în colțul din dreapta sus pentru confirmare",
+    "iosInstructions": "Apasă Distribuie apoi Adaugă pe ecranul principal.",
     "install": "Instalează",
     "dismiss": "Nu acum"
   }
