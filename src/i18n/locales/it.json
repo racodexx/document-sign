@@ -50,6 +50,10 @@
     "title": "Aggiungi alla schermata Home",
     "message": "Installa questa app per accedervi rapidamente dalla schermata Home.",
     "iosInstructions": "Tocca Condividi poi Aggiungi alla schermata Home.",
+    "iosStepsTitle": "Segui questi passaggi in Safari:",
+    "iosStep1": "Tocca l'icona Condividi (⬆) nella parte inferiore dello schermo",
+    "iosStep2": "Scorri verso il basso e tocca \"Aggiungi alla schermata Home\"",
+    "iosStep3": "Tocca \"Aggiungi\" in alto a destra per confermare",
     "install": "Installa",
     "dismiss": "Non ora"
   }
