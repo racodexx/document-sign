@@ -50,6 +50,10 @@
     "title": "Adicionar à tela inicial",
     "message": "Instale este aplicativo para acesso rápido pela tela inicial.",
     "iosInstructions": "Toque em Compartilhar e depois em Adicionar à Tela Inicial.",
+    "iosStepsTitle": "Siga estes passos no Safari:",
+    "iosStep1": "Toque no ícone Compartilhar (⬆) na parte inferior da tela",
+    "iosStep2": "Role para baixo e toque em \"Adicionar à Tela Inicial\"",
+    "iosStep3": "Toque em \"Adicionar\" no canto superior direito para confirmar",
     "install": "Instalar",
     "dismiss": "Agora não"
   }

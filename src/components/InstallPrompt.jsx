@@ -75,6 +75,46 @@ const DismissBtn = styled.button`
   &:hover { background-color: #e0e7ff; }
 `;
 
+const IosGuide = styled.div`
+  margin-top: 0.625rem;
+  background: #fff;
+  border: 1px solid #c7d2fe;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+`;
+
+const IosGuideTitle = styled.p`
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #3730a3;
+`;
+
+const IosGuideStep = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: #4338ca;
+  line-height: 1.4;
+  & + & { margin-top: 0.3rem; }
+`;
+
+const StepBadge = styled.span`
+  background: #4f46e5;
+  color: #fff;
+  border-radius: 50%;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+`;
+
 const STORAGE_KEY = "install_prompt_dismissed";
 
 const isIos = () =>
@@ -89,6 +129,7 @@ const InstallPrompt = () => {
   const [promptEvent, setPromptEvent] = useState(null);
   const [show, setShow] = useState(false);
   const [ios, setIos] = useState(false);
+  const [showIosGuide, setShowIosGuide] = useState(false);
 
   useEffect(() => {
     if (!isMobile) return;
@@ -114,16 +155,7 @@ const InstallPrompt = () => {
 
   const handleInstall = async () => {
     if (ios) {
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: document.title,
-            url: window.location.href,
-          });
-        } catch (_) {
-          // user cancelled or share failed — keep banner visible
-        }
-      }
+      setShowIosGuide(true);
       return;
     }
     if (!promptEvent) return;
@@ -150,9 +182,28 @@ const InstallPrompt = () => {
           {ios ? t("install.iosInstructions") : t("install.message")}
         </BannerText>
         <ButtonRow>
-          <InstallBtn onClick={handleInstall}>{t("install.install")}</InstallBtn>
+          {!showIosGuide && (
+            <InstallBtn onClick={handleInstall}>{t("install.install")}</InstallBtn>
+          )}
           <DismissBtn onClick={dismiss}>{t("install.dismiss")}</DismissBtn>
         </ButtonRow>
+        {showIosGuide && (
+          <IosGuide>
+            <IosGuideTitle>{t("install.iosStepsTitle")}</IosGuideTitle>
+            <IosGuideStep>
+              <StepBadge>1</StepBadge>
+              <span>{t("install.iosStep1")}</span>
+            </IosGuideStep>
+            <IosGuideStep>
+              <StepBadge>2</StepBadge>
+              <span>{t("install.iosStep2")}</span>
+            </IosGuideStep>
+            <IosGuideStep>
+              <StepBadge>3</StepBadge>
+              <span>{t("install.iosStep3")}</span>
+            </IosGuideStep>
+          </IosGuide>
+        )}
       </Body>
     </Banner>
   );

@@ -50,6 +50,10 @@
     "title": "Zum Startbildschirm hinzufügen",
     "message": "Installieren Sie diese App für schnellen Zugriff vom Startbildschirm.",
     "iosInstructions": "Tippen Sie auf Teilen dann auf Zum Home-Bildschirm.",
+    "iosStepsTitle": "Folge diesen Schritten in Safari:",
+    "iosStep1": "Tippe auf das Teilen-Symbol (⬆) am unteren Bildschirmrand",
+    "iosStep2": "Scrolle nach unten und tippe auf „Zum Home-Bildschirm"",
+    "iosStep3": "Tippe auf „Hinzufügen" oben rechts, um zu bestätigen",
     "install": "Installieren",
     "dismiss": "Nicht jetzt"
   }
