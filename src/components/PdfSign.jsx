@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, degrees } from "pdf-lib";
 import { Button, InfoBox, Container } from "./base/index";
 import useIsMobile from "../hooks/useIsMobile";
 
@@ -355,27 +355,61 @@ const PdfSign = ({ file, signature, onReset, onBack }) => {
       );
       const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
 
-      // Get page dimensions
-      const { width: pdfW, height: pdfH } = page.getSize();
+      // Visible page box: pdf.js renders the CropBox, and pdf-lib draws in
+      // the unrotated user space of that same box.
+      const { x: boxX, y: boxY, width: boxW, height: boxH } = page.getCropBox();
 
-      // Scale screen-pixel coords back to PDF point space
-      const renderedW = pageRef.current ? pageRef.current.offsetWidth : pdfW;
-      const renderedH = pageRef.current ? pageRef.current.offsetHeight : pdfH;
-      const scaleX = pdfW / renderedW;
-      const scaleY = pdfH / renderedH;
+      // /Rotate is applied by the viewer but not by pdf-lib coordinate space,
+      // so a quarter-turned page renders with its width/height swapped.
+      const rotation = ((page.getRotation().angle % 360) + 360) % 360;
+      const isQuarterTurn = rotation === 90 || rotation === 270;
+      const viewW = isQuarterTurn ? boxH : boxW;
+      const viewH = isQuarterTurn ? boxW : boxH;
 
-      const sigX = signaturePosition.x * scaleX;
+      // Scale screen-pixel coords back to the point space of the page as displayed
+      const renderedW = pageRef.current ? pageRef.current.offsetWidth : viewW;
+      const renderedH = pageRef.current ? pageRef.current.offsetHeight : viewH;
+      const scaleX = viewW / renderedW;
+      const scaleY = viewH / renderedH;
+
       const sigW = signatureSize.width * scaleX;
       const sigH = signatureSize.height * scaleY;
-      // PDF Y-axis is bottom-up
-      const sigY = pdfH - signaturePosition.y * scaleY - sigH;
 
-      // Draw the signature on the PDF
+      // Anchor = bottom-left corner of the signature as the user sees it,
+      // in view space (origin top-left, y growing downwards).
+      const anchorU = signaturePosition.x * scaleX;
+      const anchorV = signaturePosition.y * scaleY + sigH;
+
+      // Map the view-space anchor into the unrotated user space of the page.
+      let localX;
+      let localY;
+      switch (rotation) {
+        case 90:
+          localX = anchorV;
+          localY = anchorU;
+          break;
+        case 180:
+          localX = boxW - anchorU;
+          localY = anchorV;
+          break;
+        case 270:
+          localX = boxW - anchorV;
+          localY = boxH - anchorU;
+          break;
+        default:
+          localX = anchorU;
+          localY = boxH - anchorV;
+          break;
+      }
+
+      // Draw the signature, counter-rotating it so it stays upright once the
+      // viewer applies /Rotate.
       page.drawImage(signatureImage, {
-        x: sigX,
-        y: sigY,
+        x: boxX + localX,
+        y: boxY + localY,
         width: sigW,
         height: sigH,
+        rotate: degrees(rotation),
       });
 
       // Save the PDF
